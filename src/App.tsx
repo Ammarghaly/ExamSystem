@@ -1,16 +1,19 @@
-import { Toaster } from 'react-hot-toast';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage.tsx";
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold text-blue-600 bg-blue-100 p-4 rounded-md mb-4">
-          AI Exam Generator
-        </h1>
-      </div>
-      <Toaster />
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="*" element={<Navigate to="/forgot-password" replace />} />
+      </Routes>
+      <Toaster position="top-center" reverseOrder={false} />
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
+
+
