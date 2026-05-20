@@ -6,10 +6,31 @@
   --font-display: 'Public Sans', sans-serif;
   --font-label: 'Inter', sans-serif;
 
+  --text-display: 2.25rem;
+  --text-display--line-height: 1.2;
+  --text-display--font-weight: 800;
+
+  --text-h1: 1.75rem;
+  --text-h1--line-height: 1.2;
+  --text-h1--font-weight: 700;
+
   --text-h2: 1.5rem;
   --text-h2--line-height: 2rem;
+  
+  --text-h3: 1rem;
+  --text-h3--line-height: 1.2;
+  --text-h3--font-weight: 600;
+
   --text-label: 0.875rem;
   --text-label--line-height: 1.25rem;
+
+  --text-body: 0.875rem;
+  --text-body--line-height: 1.5;
+  --text-body--font-weight: 400;
+
+  --text-small: 0.75rem;
+  --text-small--line-height: 1.5;
+  --text-small--font-weight: 400;
 
   --color-primary: rgba(0, 40, 142, 1);
   --color-primary-foreground: rgba(255, 255, 255, 1);

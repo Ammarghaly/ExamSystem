@@ -1,6 +1,19 @@
+import { Moon, Sun } from "lucide-react";
+import { useThemeStore } from "../../../stores/use-theme-store";
+
 export default function NavActions() {
+  const { theme, toggleTheme } = useThemeStore();
+
   return (
     <div className="hidden md:flex items-center gap-sm">
+      <button
+        onClick={toggleTheme}
+        className="p-2 mr-2 rounded-lg text-primary hover:bg-primary/10 transition-colors duration-200"
+        aria-label="Toggle Theme"
+      >
+        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+      </button>
+
       <a
         href="/login"
         className="px-lg py-sm rounded-lg font-label text-label text-primary border border-primary/30 hover:bg-primary/5 hover:border-primary/60 transition-all duration-200 cursor-pointer"
