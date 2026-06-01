@@ -7,9 +7,10 @@ export interface PageHeaderProps {
     icon: React.ElementType;
     text: string;
   };
+  rightContent?: React.ReactNode;
 }
 
-export function PageHeader({ title, subtitle, badge }: PageHeaderProps) {
+export function PageHeader({ title, subtitle, badge, rightContent }: PageHeaderProps) {
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
@@ -24,6 +25,7 @@ export function PageHeader({ title, subtitle, badge }: PageHeaderProps) {
         </div>
         {subtitle && <p className="text-sm font-normal text-gray-500 mt-2">{subtitle}</p>}
       </div>
+      {rightContent && <div>{rightContent}</div>}
     </div>
   );
 }
