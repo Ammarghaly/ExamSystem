@@ -11,6 +11,7 @@ import GenerateExamPage from "./pages/GenerateExamPage";
 import TeacherExamManagementPage from "./pages/TeacherExamManagementPage";
 import ManualExamCreatorPage from "./pages/ManualExamCreatorPage";
 import ExamCreationSelectionPage from "./pages/ExamCreationSelectionPage";
+import StudentExamPage from "./pages/StudentExamPage";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
@@ -31,6 +32,7 @@ function App() {
         <Route path="/teacher/generate-exam" element={<ExamCreationSelectionPage />} />
         <Route path="/teacher/generate-exam/ai-generate" element={<GenerateExamPage />} />
         <Route path="/teacher/groups" element={<MyGroups />} />
+        <Route path="/student/exam/:id" element={<StudentExamPage />} />
       </Routes>
       <Toaster position="bottom-right" />
     </BrowserRouter>
