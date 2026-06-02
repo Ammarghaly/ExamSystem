@@ -1,9 +1,14 @@
+import { useState, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import StudentSignUpForm from "./StudentSignUpForm";
 import TeacherSignUpForm from "./TeacherSignUpForm";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { sendOtp, verifyOtp } from "../../api/auth.ts";
+import OtpVerificationForm from "./OtpVerificationForm";
+import api from "../../api/axios";
 
 const baseSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters").max(20, "Name must be at most 20 characters"),
@@ -42,9 +47,21 @@ export const signUpSchema = z
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;
 
-import api from "../../api/axios";
-
 export default function SignUpForm() {
+  const navigate = useNavigate();
+  const [isOtpStep, setIsOtpStep] = useState(false);
+  const [emailForOtp, setEmailForOtp] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [otpError, setOtpError] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown > 0) {
+      const timer = setTimeout(() => setCooldown(cooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [cooldown]);
+
   const methods = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -62,6 +79,7 @@ export default function SignUpForm() {
   const currentRole = watch("role");
 
   const onSubmit = async (data: SignUpFormData) => {
+    setLoading(true);
     try {
       const formData = new FormData();
       formData.append("name", data.name);
@@ -80,14 +98,58 @@ export default function SignUpForm() {
 
       const response = await api.post("/auth/signUp", formData);
       console.log("Registration successful", response.data);
-      // Handle success (e.g., redirect or show toast)
+      
+      setEmailForOtp(data.email);
+      setIsOtpStep(true);
+      setCooldown(60);
+      toast.success("Verification code sent to your email!");
     } catch (error: any) {
       console.error("Registration failed:", error);
-      // Handle backend errors gracefully
-      if (error.response?.data?.message) {
-        setError("root", { message: error.response.data.message });
+      const errorMsg = error.response?.data?.error || error.response?.data?.message;
+      if (errorMsg) {
+        setError("root", { message: errorMsg });
+      } else {
+        setError("root", { message: "Registration failed. Please try again." });
       }
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleOtpVerifySubmit = async (code: string) => {
+    setOtpError("");
+    setLoading(true);
+    try {
+      await verifyOtp(emailForOtp, code);
+      toast.success("Account verified successfully! You can now log in.");
+      navigate("/login");
+    } catch (error: any) {
+      const errorMsg = error.response?.data?.error || error.response?.data?.message || "Invalid or expired OTP code.";
+      toast.error(errorMsg);
+      setOtpError(errorMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (cooldown > 0) return;
+    setLoading(true);
+    try {
+      await sendOtp(emailForOtp);
+      toast.success("Verification code resent successfully!");
+      setCooldown(60);
+    } catch (error: any) {
+      const errorMsg = error.response?.data?.error || error.response?.data?.message || "Failed to resend OTP.";
+      toast.error(errorMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChangeEmail = () => {
+    setIsOtpStep(false);
+    setOtpError("");
   };
 
   const handleRoleChange = (newRole: "Student" | "Teacher") => {
@@ -113,6 +175,20 @@ export default function SignUpForm() {
       } as SignUpFormData);
     }
   };
+
+  if (isOtpStep) {
+    return (
+      <OtpVerificationForm
+        email={emailForOtp}
+        onSubmit={handleOtpVerifySubmit}
+        loading={loading}
+        error={otpError}
+        cooldown={cooldown}
+        onResend={handleResendOtp}
+        onChangeEmail={handleChangeEmail}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col w-full">
