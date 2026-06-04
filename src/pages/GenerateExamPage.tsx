@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Sparkles, Loader2 } from 'lucide-react';
 import { TeacherLayout } from '../components/Layout/TeacherLayout';
 import { FileUploadArea } from '../components/generate-exam/FileUploadArea';
 import { ExamSettings } from '../components/generate-exam/ExamSettings';
@@ -7,13 +6,14 @@ import { PublishSettingsArea } from '../components/Common/PublishSettingsArea';
 import { z } from 'zod';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
-import { uploadPDF, generateExamAI, publishAIExam } from '../api/exams';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const generateExamSchema = z.object({
   examTitle: z.string().min(1, 'Exam title is required'),
-  file: z.instanceof(File, { message: 'Course material PDF is required to generate an exam' }),
+  file: z.instanceof(File, { message: 'Course material PDF is required to generate an exam' })
+    .refine((file) => file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'), {
+      message: 'Only PDF files are supported',
+    }),
   difficultyDistribution: z.object({
     Easy_Memorization: z.number().min(0),
     Easy_Creativity: z.number().min(0),
@@ -44,21 +44,30 @@ const generateExamSchema = z.object({
 }, {
   message: 'MCQ count cannot exceed the total questions count',
   path: ['mcqCount'],
+}).refine((data) => {
+  if (data.availableFrom && data.deadline) {
+    return data.deadline > data.availableFrom;
+  }
+  return true;
+}, {
+  message: 'Deadline must be after the start (Available From) date',
+  path: ['deadline'],
 });
 
 type GenerateExamFormValues = z.infer<typeof generateExamSchema>;
 
 export default function GenerateExamPage() {
   const [step, setStep] = useState<1 | 2>(1);
-  const [examId, setExamId] = useState<string | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const stateData = location.state as Partial<GenerateExamFormValues> | null;
   
   const methods = useForm<GenerateExamFormValues>({
     resolver: zodResolver(generateExamSchema),
     defaultValues: {
-      examTitle: '',
-      difficultyDistribution: {
+      examTitle: stateData?.examTitle || '',
+      file: stateData?.file || undefined,
+      difficultyDistribution: stateData?.difficultyDistribution || {
         Easy_Memorization: 3,
         Easy_Creativity: 2,
         Easy_Thinking: 2,
@@ -69,90 +78,18 @@ export default function GenerateExamPage() {
         Hard_Creativity: 3,
         Hard_Thinking: 3,
       },
-      mcqCount: 15,
-      targetGroup: '',
-      availableFrom: undefined,
-      deadline: undefined,
-      allowImmediateAI: true,
-      allowReview: true,
-      randomizeQuestions: false,
+      mcqCount: stateData?.mcqCount ?? 15,
+      targetGroup: stateData?.targetGroup || '',
+      availableFrom: stateData?.availableFrom ? new Date(stateData.availableFrom) : undefined,
+      deadline: stateData?.deadline ? new Date(stateData.deadline) : undefined,
+      allowImmediateAI: stateData?.allowImmediateAI ?? true,
+      allowReview: stateData?.allowReview ?? true,
+      randomizeQuestions: stateData?.randomizeQuestions ?? false,
     }
   });
 
   const onSubmit = async (data: GenerateExamFormValues) => {
-    setIsGenerating(true);
-    const toastId = toast.loading('Uploading material and generating exam with AI... This might take up to a minute.');
-
-    try {
-      // Step 1: Upload PDF
-      const uploadRes = await uploadPDF(data.file);
-      const generatedId = uploadRes.examId;
-      setExamId(generatedId);
-
-      // Step 2: Calculate total questions
-      const totalQuestions = Object.values(data.difficultyDistribution).reduce((sum, val) => sum + val, 0);
-
-      // Step 3: Map difficulties dynamically from the grid
-      const difficultyRules = [
-        { key: 'Easy_Memorization', difficulty: 'Easy' as const, measures: 'Memorization' as const },
-        { key: 'Easy_Creativity', difficulty: 'Easy' as const, measures: 'Creativity' as const },
-        { key: 'Easy_Thinking', difficulty: 'Easy' as const, measures: 'Thinking' as const },
-        { key: 'Normal_Memorization', difficulty: 'Normal' as const, measures: 'Memorization' as const },
-        { key: 'Normal_Creativity', difficulty: 'Normal' as const, measures: 'Creativity' as const },
-        { key: 'Normal_Thinking', difficulty: 'Normal' as const, measures: 'Thinking' as const },
-        { key: 'Hard_Memorization', difficulty: 'Hard' as const, measures: 'Memorization' as const },
-        { key: 'Hard_Creativity', difficulty: 'Hard' as const, measures: 'Creativity' as const },
-        { key: 'Hard_Thinking', difficulty: 'Hard' as const, measures: 'Thinking' as const },
-      ].map(item => {
-        const count = data.difficultyDistribution[item.key as keyof typeof data.difficultyDistribution] || 0;
-        return {
-          count,
-          difficulty: item.difficulty,
-          measures: item.measures,
-        };
-      }).filter(rule => rule.count > 0);
-
-      // Step 4: Call AI Exam Generation API
-      await generateExamAI({
-        examId: generatedId,
-        totalQuestions,
-        mcqCount: data.mcqCount,
-        difficulty: difficultyRules,
-      });
-
-      toast.success('AI questions generated successfully!', { id: toastId });
-
-      // Step 5: Publish Exam
-      const user = JSON.parse(
-        localStorage.getItem("user") || sessionStorage.getItem("user") || "{}"
-      );
-      const teacherID = user._id ;
-
-      const openingAt = Math.floor(new Date(data.availableFrom).getTime() / 1000);
-      const closingAt = Math.floor(new Date(data.deadline).getTime() / 1000);
-
-      const payload = {
-        examId: generatedId,
-        examDetails: {
-          title: data.examTitle,
-          openingAt,
-          closingAt,
-          durationMinutes: 60,
-          accessCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
-          status: 'Active' as const,
-          teacherID,
-        }
-      };
-
-      await publishAIExam(data.targetGroup, payload);
-      toast.success('Exam successfully generated and published!');
-      navigate('/teacher/exam-management');
-    } catch (error: any) {
-      console.error(error);
-      toast.error(error?.response?.data?.error || error?.response?.data?.message || error.message || 'Failed to generate and publish exam', { id: toastId });
-    } finally {
-      setIsGenerating(false);
-    }
+    navigate('/teacher/generate-exam/processing', { state: data });
   };
 
   const handleNextStep = async () => {
@@ -219,7 +156,7 @@ export default function GenerateExamPage() {
             <PublishSettingsArea 
               onBack={() => setStep(1)} 
               submitLabel="✨ Generate Exam with AI" 
-              isSubmitting={isGenerating} 
+              isSubmitting={false} 
             />
           )}
 

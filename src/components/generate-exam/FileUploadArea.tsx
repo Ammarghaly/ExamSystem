@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { UploadCloud, FileText, X, AlertCircle } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 export function FileUploadArea() {
   const { setValue, watch, formState: { errors } } = useFormContext();
@@ -10,7 +11,17 @@ export function FileUploadArea() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setValue('file', e.target.files[0], { shouldValidate: true });
+      const selectedFile = e.target.files[0];
+      const isPDF = selectedFile.type === 'application/pdf' || selectedFile.name.toLowerCase().endsWith('.pdf');
+      if (!isPDF) {
+        toast.error('Only PDF files are supported! Please upload a PDF file.');
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+        setValue('file', null, { shouldValidate: true });
+        return;
+      }
+      setValue('file', selectedFile, { shouldValidate: true });
     }
   };
 
@@ -41,7 +52,7 @@ export function FileUploadArea() {
         ref={fileInputRef}
         onChange={handleFileChange}
         className="hidden"
-        accept=".pdf,.docx,.txt"
+        accept=".pdf"
       />
       
       {!file ? (
@@ -62,7 +73,7 @@ export function FileUploadArea() {
               Drag & drop your syllabus, lecture notes, or reading materials here, or click to browse.
             </p>
             <p className="text-xs font-semibold text-gray-400 mt-4 z-10">
-              Supported formats: PDF, DOCX, TXT (Max 50MB)
+              Supported formats: PDF (Max 50MB)
             </p>
           </div>
           {errors.file && (

@@ -8,6 +8,7 @@ import { useThemeStore } from "./stores/use-theme-store";
 import SignUpPage from "./pages/SignUpPage";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
 import GenerateExamPage from "./pages/GenerateExamPage";
+import AIProcessingPage from "./pages/AIProcessingPage";
 import LoginPage from "./pages/LoginPage";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
 import GuestRoute from "./components/auth/GuestRoute";
@@ -16,6 +17,7 @@ import TeacherExamManagementPage from "./pages/TeacherExamManagementPage";
 import ManualExamCreatorPage from "./pages/ManualExamCreatorPage";
 import ExamCreationSelectionPage from "./pages/ExamCreationSelectionPage";
 import StudentExamPage from "./pages/StudentExamPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
@@ -41,8 +43,10 @@ function App() {
         <Route path="/teacher/generate-exam" element={<ProtectedRoute><ExamCreationSelectionPage /></ProtectedRoute>} />
         <Route path="/teacher/generate-exam/manual-create" element={<ProtectedRoute><ManualExamCreatorPage /></ProtectedRoute>} />
         <Route path="/teacher/generate-exam/ai-generate" element={<ProtectedRoute><GenerateExamPage /></ProtectedRoute>} />
+        <Route path="/teacher/generate-exam/processing" element={<ProtectedRoute><AIProcessingPage /></ProtectedRoute>} />
         <Route path="/teacher/groups" element={<ProtectedRoute><MyGroups /></ProtectedRoute>} />
         <Route path="/student/exam/:id" element={<StudentExamPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Toaster position="bottom-right" />
     </BrowserRouter>

@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getMyExams } from '../api/exams';
 import {
-  ArrowRight,
   FileText,
   MoreVertical,
   BarChart3,
