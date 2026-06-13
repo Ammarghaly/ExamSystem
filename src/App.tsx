@@ -25,6 +25,7 @@ import ExamReviewPage from "./pages/ExamReviewPage";
 import GroupDetailsPage from "./pages/GroupDetailsPage";
 import StudentPracticeExamsPage from "./pages/StudentPracticeExamsPage";
 import StudentResultsPage from "./pages/StudentResultsPage";
+import StudentAdmissionsPage from "./pages/StudentAdmissionsPage";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
@@ -141,6 +142,14 @@ function App() {
           element={
             <ProtectedRoute>
               <GroupDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teacher/admissions"
+          element={
+            <ProtectedRoute>
+              <StudentAdmissionsPage />
             </ProtectedRoute>
           }
         />

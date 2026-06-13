@@ -23,7 +23,6 @@ const examStatusStyles: Record<AssignedExam["status"], string> = {
 
 // ── Helper ────────────────────────────────────────────────────────────────────
 const AVATAR_COLORS = ["#4f46e5", "#7c3aed", "#0d9488", "#0ea5e9", "#16a34a", "#dc2626"];
-
 export function mapToStudentRow(s: GroupDetailsStudent, i: number) {
   const name = s?.name || s?.email || "Unknown Student";
   const names = name.trim().split(" ");
@@ -121,37 +120,53 @@ export default function GroupDetailsPage() {
       </button>
 
       {/* ── Header card ───────────────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-extrabold text-gray-900 mb-1">
-              {group.groupName}
-            </h1>
-            <p className="text-sm text-gray-400">{group.subject}</p>
-          </div>
+     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
 
-          {/* Invite code */}
-          <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 shrink-0">
-            <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">
-                Invite Code
-              </p>
-              <p className="text-base font-extrabold text-gray-800 tracking-widest">
-                {group.inviteCode}
-              </p>
-            </div>
-            <button
-              onClick={handleCopy}
-              className="text-gray-400 hover:text-indigo-600 transition-colors ml-2"
-            >
-              {copied
-                ? <span className="text-green-500 text-xs font-medium">Copied!</span>
-                : <Copy size={16} />}
-            </button>
-          </div>
+    {/* Left side */}
+    <div>
+      <h1 className="text-3xl font-extrabold text-gray-900 mb-1">
+        {group.groupName}
+      </h1>
+      <p className="text-sm text-gray-400">{group.subject}</p>
+    </div>
+
+    {/* Right side */}
+    <div className="flex items-center gap-3">
+
+      {/* Add Student Button 👇 */}
+     
+      {/* Invite code */}
+      <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 shrink-0">
+        <div>
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">
+            Invite Code
+          </p>
+          <p className="text-base font-extrabold text-gray-800 tracking-widest">
+            {group.inviteCode}
+          </p>
         </div>
-      </div>
 
+        <button
+          onClick={handleCopy}
+          className="text-gray-400 hover:text-indigo-600 transition-colors ml-2"
+        >
+          {copied
+            ? <span className="text-green-500 text-xs font-medium">Copied!</span>
+            : <Copy size={16} />}
+        </button>
+      </div>
+ <button
+        onClick={() => setIsAddModalOpen(true)}
+        className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
+      >
+        <Plus size={16} />
+        Add Student
+      </button>
+
+    </div>
+  </div>
+</div>
       {/* ── Tabs ──────────────────────────────────────────────────────────── */}
       <div className="flex gap-0 mb-6 border-b border-gray-200">
         {(["students", "exams"] as const).map((tab) => (

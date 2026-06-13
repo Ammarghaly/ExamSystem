@@ -1,5 +1,3 @@
-// src/components/groups/AddStudentModal.tsx
-
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   Sparkles,
   Users,
+  UserCheck,
   School,
   FileText,
 } from "lucide-react";
@@ -12,6 +13,7 @@ const sidebarNavigation = [
   { name: "Generate Exam", href: "/teacher/generate-exam", icon: Sparkles },
   { name: "Manage exams", href: "/teacher/exam-management", icon: FileText },
   { name: "My Groups", href: "/teacher/groups", icon: Users },
+  { name: "Requests", href: "/teacher/admissions", icon: UserCheck },
   { name: "Profile", href: "/teacher/profile", icon: Users },
 ];
 

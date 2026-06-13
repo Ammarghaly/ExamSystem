@@ -8,6 +8,7 @@ import {
   FileText,
   GraduationCap,
   BarChart,
+  UserCheck,
 } from "lucide-react";
 import { useUserStore } from "../../stores/use-user-store";
 import { Header } from "./Header";
@@ -25,6 +26,7 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
         { href: "/teacher/generate-exam", icon: Sparkles, label: "Generate" },
         { href: "/teacher/exam-management", icon: FileText, label: "Exams" },
         { href: "/teacher/groups", icon: Users, label: "Groups" },
+        { href: "/teacher/admissions", icon: UserCheck, label: "Requests" },
       ]
     : [
         { href: "/student/dashboard", icon: GraduationCap, label: "Learning" },
@@ -40,7 +42,8 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
         { name: "Generate Exam", href: "/teacher/generate-exam", icon: Sparkles },
         { name: "Manage exams", href: "/teacher/exam-management", icon: FileText },
         { name: "My Groups", href: "/teacher/groups", icon: Users },
-        {name: "Porfile", href: "/teacher/profile", icon: User},
+        { name: "Requests", href: "/teacher/admissions", icon: UserCheck },
+        { name: "Profile", href: "/teacher/profile", icon: User },
       ]
     : [
         { name: "My Learning", href: "/student/dashboard", icon: GraduationCap },
@@ -48,7 +51,7 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
         { name: "My Groups", href: "/student/groups", icon: Users },
         { name: "Practice Exams", href: "/student/practice", icon: FileText },
         { name: "Results", href: "/student/results", icon: BarChart },
-        {name: "Porfile", href: "/teacher/profile", icon: User},
+        { name: "Porfile", href: "/teacher/profile", icon: User },
       ];
 
   return (
