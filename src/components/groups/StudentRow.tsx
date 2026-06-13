@@ -65,7 +65,7 @@ export default function StudentRow({ student, onRemove }: Props) {
       <td className="px-6 py-4">
         <button
           onClick={() => onRemove(student.id)}
-          className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-700 font-medium transition-colors opacity-0 group-hover:opacity-100"
+          className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-700 font-medium transition-colors opacity-100 group-hover:opacity-100"
         >
           <UserMinus size={14} />
           Remove
