@@ -1,8 +1,9 @@
-import { LogOut } from "lucide-react";
+import { LogOut, Sun, Moon } from "lucide-react";
 import img from "../../assets/img.svg";
 import iconLogo from "../../assets/icon-logo.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUserStore } from "../../stores/use-user-store";
+import { useThemeStore } from "../../stores/use-theme-store";
 import { logout } from "../../api/auth";
 import toast from "react-hot-toast";
 
@@ -15,6 +16,7 @@ export function Header({ title, role }: HeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser } = useUserStore();
+  const { theme, toggleTheme } = useThemeStore();
 
   const handleLogout = async () => {
     try {
@@ -91,6 +93,16 @@ export function Header({ title, role }: HeaderProps) {
             className="w-full h-full object-cover"
           />
         </div>
+
+        {/* Theme toggle button */}
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-full text-muted-foreground hover:bg-muted hover:text-primary transition-colors cursor-pointer"
+          title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          aria-label="Toggle Theme"
+        >
+          {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+        </button>
 
         {/* Logout button */}
         <button
