@@ -56,19 +56,22 @@ export function Header({ title, role }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-4 ml-auto">
-        {currentUser?.available_credits !== undefined && (
-          <span className="ml-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800 text-xs font-bold">
-            <img src={img} className="w-6 h-6" alt="Bolt" />
-            {currentUser.available_credits}
-          </span>
-        )}
-
+       
         <span
           onClick={() => navigate(profilePath)}
           className="hidden md:block text-sm font-medium text-gray-600 cursor-pointer hover:text-indigo-700 transition-colors select-none"
         >
           {currentUser?.name || ""}
         </span>
+
+
+         {currentUser?.available_credits !== undefined && (
+          <span className="ml-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800 text-xs font-bold">
+            <img src={img} className="w-6 h-6" alt="Bolt" />
+            {currentUser.available_credits}
+          </span>
+        )}
+
 
         <div
           onClick={() => navigate(profilePath)}
