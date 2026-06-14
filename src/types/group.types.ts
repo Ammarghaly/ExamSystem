@@ -39,6 +39,12 @@ export interface AssignedExam {
   status: ExamStatus;
   submissions: number;
   totalStudents: number;
+  attemptId?: string | null;
+  isCompleted?: boolean;
+  isAvailable?: boolean;
+  durationMinutes?: number;
+  numOfQuestion?: number;
+  dueLabel?: string;
 }
 export interface GroupDetailsData {
   _id: string;

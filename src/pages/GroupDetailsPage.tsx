@@ -220,7 +220,7 @@ export default function GroupDetailsPage() {
                     <div>
                       {exam.isCompleted ? (
                         <button
-                          onClick={() => navigate(`/student/exam-results/${exam.id}`)}
+                          onClick={() => navigate(`/student/exam-results/${exam.attemptId}`)}
                           className="font-semibold text-sm px-6 py-2.5 rounded-lg border border-indigo-200 text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer"
                         >
                           View Results
