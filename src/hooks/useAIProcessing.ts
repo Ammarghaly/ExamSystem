@@ -181,12 +181,11 @@ export function useAIProcessing() {
           deletion_at = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
         }
 
-        const openingAt = Math.floor(
-          new Date(formData.availableFrom).getTime() / 1000,
-        );
-        const closingAt = Math.floor(
-          new Date(formData.deadline).getTime() / 1000,
-        );
+        const openingDate = formData.availableFrom ? new Date(formData.availableFrom) : new Date();
+        const deadlineDate = formData.deadline ? new Date(formData.deadline) : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
+
+        const openingAt = Math.floor(openingDate.getTime() / 1000);
+        const closingAt = Math.floor(deadlineDate.getTime() / 1000);
 
         const payload = {
           examId: generatedId,
@@ -198,14 +197,16 @@ export function useAIProcessing() {
             accessCode: Math.random()
               .toString(36)
               .substring(2, 8)
-               .toUpperCase(),
+              .toUpperCase(),
             status: "Active" as const,
             teacherID,
             deletion_at,
+            allowReview: formData.allowReview !== false,
+            randomizeQuestions: formData.randomizeQuestions ?? false,
           },
         };
 
-        const publishResponse = await publishAIExam(formData.targetGroup, payload);
+        const publishResponse = await publishAIExam(formData.targetGroup || null, payload);
         setProgress(100);
 
         // Update user credits in store automatically

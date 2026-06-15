@@ -32,6 +32,8 @@ export type GenerateExamFormValues = {
 
 export function useGenerateExam() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [showInsufficientCreditsModal, setShowInsufficientCreditsModal] = useState(false);
+  const [creditsRequired, setCreditsRequired] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const stateData = location.state as Partial<GenerateExamFormValues> | null;
@@ -153,6 +155,8 @@ export function useGenerateExam() {
         });
         hasCustomError = true;
       } else if (userCredits < total) {
+        setCreditsRequired(total);
+        setShowInsufficientCreditsModal(true);
         methods.setError('difficultyDistribution', {
           type: 'manual',
           message: `Insufficient credits. Generating this exam costs ${total} credits, but you only have ${userCredits}.`,
@@ -191,5 +195,9 @@ export function useGenerateExam() {
     onSubmit,
     handleNextStep,
     isStudent,
+    showInsufficientCreditsModal,
+    setShowInsufficientCreditsModal,
+    creditsRequired,
+    userCredits: currentUser?.available_credits ?? 0,
   };
 }

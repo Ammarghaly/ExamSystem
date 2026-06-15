@@ -67,7 +67,6 @@ export function SecurityForm() {
           </label>
           <input
             className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-sm text-body text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
-            placeholder="••••••••"
             type="password"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
@@ -81,7 +80,6 @@ export function SecurityForm() {
             </label>
             <input
               className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-sm text-body text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
-              placeholder="••••••••"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -94,7 +92,6 @@ export function SecurityForm() {
             </label>
             <input
               className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-md py-sm text-body text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
-              placeholder="••••••••"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { GraduationCap } from "lucide-react";
 
 import { sendOtp, verifyOtp, resetPassword } from "../api/auth.ts";
+import logoIcon from "../assets/icon-logo.png";
 
 import ForgotPasswordForm from "../components/auth/ForgotPasswordForm.tsx";
 import OtpVerificationForm from "../components/auth/OtpVerificationForm.tsx";
@@ -124,6 +124,7 @@ export default function ForgotPasswordPage() {
             cooldown={cooldown}
             onResend={handleResendOtp}
             onChangeEmail={handleChangeEmail}
+            purpose="reset"
           />
         );
       case "reset":
@@ -141,20 +142,22 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-[#f3f5f8] via-[#eef2f9] to-[#f4f2fc] flex flex-col items-center justify-center p-4 selection:bg-[#6b38d4]/10 selection:text-[#6b38d4]">
+    <div className="min-h-screen bg-gradient-to-tr from-[#f3f5f8] via-[#eef2f9] to-[#f4f2fc] dark:from-[#101214] dark:via-[#131518] dark:to-[#171520] flex flex-col items-center justify-center p-4 selection:bg-[#6b38d4]/10 selection:text-[#6b38d4] dark:selection:bg-[#6b38d4]/20 dark:selection:text-indigo-400">
       <div />
 
       <div className="w-full max-w-[440px] flex flex-col items-center space-y-6 py-8">
         <div className="flex flex-col items-center space-y-2 select-none">
-          <div className="flex items-center justify-center size-12 rounded-xl bg-[#3b2fc9] text-white shadow-md shadow-[#3b2fc9]/20">
-            <GraduationCap className="size-7" />
-          </div>
-          <h1 className="text-xl font-bold text-[#3b2fc9] tracking-tight">
+          <img
+            src={logoIcon}
+            alt="Academix"
+            className="w-14 h-14 object-contain"
+          />
+          <h1 className="text-xl font-bold text-[#3b2fc9] dark:text-indigo-400 tracking-tight">
             Academix
           </h1>
         </div>
 
-        <div className="w-full bg-white border border-[#eceff3] rounded-2xl p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.03)] transition-all duration-300">
+        <div className="w-full bg-white dark:bg-[#1f2226] border border-[#eceff3] dark:border-white/5 rounded-2xl p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-300">
           {renderCardContent()}
         </div>
       </div>

@@ -83,3 +83,13 @@ export async function updateUserProfile(formData: FormData) {
   return response.data;
 }
 
+export async function updateUserCredits(creditsData: {
+  available_credits: number;
+  subscription_credits: number;
+  purchased_credits: number;
+  subscription_type: string;
+}) {
+  const response = await api.put<{ success: boolean; data: any }>("/profile/checkout", creditsData);
+  return response.data;
+}
+

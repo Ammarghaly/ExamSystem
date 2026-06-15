@@ -6,7 +6,6 @@ import { ToggleSetting } from './ToggleSetting';
 import { useQuery } from '@tanstack/react-query';
 import { getMyGroups } from '../../api/groups';
 import { useUserStore } from '../../stores/use-user-store';
-import toast from 'react-hot-toast';
 import { PublishSettingsDates } from './PublishSettingsDates';
 import { PublishSettingsModals } from './PublishSettingsModals';
 
@@ -72,8 +71,6 @@ export function PublishSettingsArea({
     }
   };
 
-  const targetGroupVal = watch('targetGroup');
-
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col pt-8 pb-12">
       {/* Header */}
@@ -117,42 +114,42 @@ export function PublishSettingsArea({
 
             {/* Dates Row */}
             <PublishSettingsDates />
-
-            {/* Duration field */}
-            <div className="mb-8">
-              <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="duration-minutes">
-                Exam Duration (Minutes)
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  id="duration-minutes"
-                  min="1"
-                  placeholder="e.g., 60"
-                  {...register('durationMinutes', { valueAsNumber: true })}
-                  className={cn(
-                    "w-full bg-white border rounded-lg py-3 px-4 text-[16px] text-gray-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all font-sans",
-                    errors.durationMinutes ? 'border-rose-500' : 'border-gray-200'
-                  )}
-                  dir="ltr"
-                  lang="en"
-                />
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                The total time allowed for students to complete the exam once they start.
-              </p>
-              {errors.durationMinutes && (
-                <p className="text-sm font-semibold text-rose-500 mt-2 flex items-center gap-1.5">
-                  <AlertCircle className="w-4 h-4" />
-                  {errors.durationMinutes.message as string}
-                </p>
-              )}
-            </div>
-
-            <hr className="border-gray-200 mb-8" />
           </>
         )}
+
+        {/* Duration field */}
+        <div className="mb-8">
+          <label className="block text-sm font-semibold text-gray-900 mb-2" htmlFor="duration-minutes">
+            Exam Duration (Minutes)
+          </label>
+          <div className="relative">
+            <input
+              type="number"
+              inputMode="numeric"
+              id="duration-minutes"
+              min="1"
+              placeholder="e.g., 60"
+              {...register('durationMinutes', { valueAsNumber: true })}
+              className={cn(
+                "w-full bg-white border rounded-lg py-3 px-4 text-[16px] text-gray-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all font-sans",
+                errors.durationMinutes ? 'border-rose-500' : 'border-gray-200'
+              )}
+              dir="ltr"
+              lang="en"
+            />
+          </div>
+          <p className="text-xs text-gray-500 mt-1">
+            The total time allowed for students to complete the exam once they start.
+          </p>
+          {errors.durationMinutes && (
+            <p className="text-sm font-semibold text-rose-500 mt-2 flex items-center gap-1.5">
+              <AlertCircle className="w-4 h-4" />
+              {errors.durationMinutes.message as string}
+            </p>
+          )}
+        </div>
+
+        <hr className="border-gray-200 mb-8" />
 
         {/* Toggles */}
         <div className="flex flex-col gap-4 mb-10">
@@ -224,12 +221,6 @@ export function PublishSettingsArea({
           </button> 
           <button 
             type="submit"
-            onClick={(e) => {
-              if (isStudent && !targetGroupVal) {
-                e.preventDefault();
-                toast.error("Please join a class group first from your dashboard before generating an exam.");
-              }
-            }}
             disabled={isSubmitting}
             className="w-full md:w-auto text-[14px] font-semibold text-white bg-indigo-700 hover:opacity-90 py-2.5 px-6 rounded-lg shadow-sm transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >

@@ -33,22 +33,22 @@ export default function TeacherSignUpForm() {
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-[#464555] ml-1">Full Name</label>
+          <label className="text-sm font-semibold text-[#464555] dark:text-zinc-400 ml-1">Full Name</label>
           <input 
             {...register("name")}
             type="text" 
             placeholder="Dr. Jane Smith" 
-            className={`w-full h-11 px-4 border ${errors.name ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-[#c7c4d8] focus:border-[#3525cd] focus:ring-[#3525cd]/20"} rounded-lg bg-[#fcf8ff] text-sm text-[#1b1b24] focus:outline-none focus:ring-2 transition-all`} 
+            className={`w-full h-11 px-4 border ${errors.name ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-[#c7c4d8] dark:border-white/10 focus:border-[#3525cd] dark:focus:border-indigo-500 focus:ring-[#3525cd]/20"} rounded-lg bg-[#fcf8ff] dark:bg-zinc-900/45 text-sm text-[#1b1b24] dark:text-white focus:outline-none focus:ring-2 transition-all`} 
           />
           {errors.name?.message && <span className="text-xs text-red-500">{errors.name.message as string}</span>}
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-[#464555] ml-1">Email Address</label>
+          <label className="text-sm font-semibold text-[#464555] dark:text-zinc-400 ml-1">Email Address</label>
           <input 
             {...register("email")}
             type="email" 
             placeholder="jane.smith@university.edu" 
-            className={`w-full h-11 px-4 border ${errors.email ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-[#c7c4d8] focus:border-[#3525cd] focus:ring-[#3525cd]/20"} rounded-lg bg-[#fcf8ff] text-sm text-[#1b1b24] focus:outline-none focus:ring-2 transition-all`} 
+            className={`w-full h-11 px-4 border ${errors.email ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-[#c7c4d8] dark:border-white/10 focus:border-[#3525cd] dark:focus:border-indigo-500 focus:ring-[#3525cd]/20"} rounded-lg bg-[#fcf8ff] dark:bg-zinc-900/45 text-sm text-[#1b1b24] dark:text-white focus:outline-none focus:ring-2 transition-all`} 
           />
           {errors.email?.message && <span className="text-xs text-red-500">{errors.email.message as string}</span>}
         </div>
@@ -56,57 +56,61 @@ export default function TeacherSignUpForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-[#464555] ml-1">Password</label>
+          <label className="text-sm font-semibold text-[#464555] dark:text-zinc-400 ml-1">Password</label>
           <input 
             {...register("password")}
             type="password" 
             placeholder="••••••••" 
-            className={`w-full h-11 px-4 border ${errors.password ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-[#c7c4d8] focus:border-[#3525cd] focus:ring-[#3525cd]/20"} rounded-lg bg-[#fcf8ff] text-sm text-[#1b1b24] focus:outline-none focus:ring-2 transition-all`} 
+            className={`w-full h-11 px-4 border ${errors.password ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-[#c7c4d8] dark:border-white/10 focus:border-[#3525cd] dark:focus:border-indigo-500 focus:ring-[#3525cd]/20"} rounded-lg bg-[#fcf8ff] dark:bg-zinc-900/45 text-sm text-[#1b1b24] dark:text-white focus:outline-none focus:ring-2 transition-all`} 
           />
           {errors.password?.message && <span className="text-xs text-red-500">{errors.password.message as string}</span>}
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-[#464555] ml-1">Confirm Password</label>
+          <label className="text-sm font-semibold text-[#464555] dark:text-zinc-400 ml-1">Confirm Password</label>
           <input 
             {...register("confirmPassword")}
             type="password" 
             placeholder="••••••••" 
-            className={`w-full h-11 px-4 border ${errors.confirmPassword ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-[#c7c4d8] focus:border-[#3525cd] focus:ring-[#3525cd]/20"} rounded-lg bg-[#fcf8ff] text-sm text-[#1b1b24] focus:outline-none focus:ring-2 transition-all`} 
+            className={`w-full h-11 px-4 border ${errors.confirmPassword ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-[#c7c4d8] dark:border-white/10 focus:border-[#3525cd] dark:focus:border-indigo-500 focus:ring-[#3525cd]/20"} rounded-lg bg-[#fcf8ff] dark:bg-zinc-900/45 text-sm text-[#1b1b24] dark:text-white focus:outline-none focus:ring-2 transition-all`} 
           />
           {errors.confirmPassword?.message && <span className="text-xs text-red-500">{errors.confirmPassword.message as string}</span>}
         </div>
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-semibold text-[#464555] ml-1">Subject Taught</label>
+        <label className="text-sm font-semibold text-[#464555] dark:text-zinc-400 ml-1">Subject Taught</label>
         <input 
           {...register("subjects_taught")}
           type="text" 
           placeholder="Advanced Mathematics, Applied Physics" 
-          className={`w-full h-11 px-4 border ${errors.subjects_taught ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-[#c7c4d8] focus:border-[#3525cd] focus:ring-[#3525cd]/20"} rounded-lg bg-[#fcf8ff] text-sm text-[#1b1b24] focus:outline-none focus:ring-2 transition-all`} 
+          className={`w-full h-11 px-4 border ${errors.subjects_taught ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-[#c7c4d8] dark:border-white/10 focus:border-[#3525cd] dark:focus:border-indigo-500 focus:ring-[#3525cd]/20"} rounded-lg bg-[#fcf8ff] dark:bg-zinc-900/45 text-sm text-[#1b1b24] dark:text-white focus:outline-none focus:ring-2 transition-all`} 
         />
         {errors.subjects_taught?.message && <span className="text-xs text-red-500">{errors.subjects_taught.message as string}</span>}
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-semibold text-[#464555] ml-1">College Certificate</label>
+        <label className="text-sm font-semibold text-[#464555] dark:text-zinc-400 ml-1">College Certificate</label>
         <label
           className={`w-full py-6 px-6 rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-3 cursor-pointer transition-all ${
-            errors.file ? "border-red-500 bg-red-50" : dragActive ? "bg-[#4f46e5]/10 border-[#3525cd]" : "border-[#C7D2FE] hover:bg-[#C7D2FE]/10 hover:border-[#3525cd]"
+            errors.file 
+              ? "border-red-500 bg-red-50 dark:bg-red-950/20" 
+              : dragActive 
+                ? "bg-[#4f46e5]/10 dark:bg-indigo-950/20 border-[#3525cd] dark:border-indigo-500" 
+                : "border-[#C7D2FE] dark:border-white/10 hover:bg-[#C7D2FE]/10 dark:hover:bg-zinc-800/40 hover:border-[#3525cd] dark:hover:border-indigo-500"
           }`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
           onDrop={handleDrop}
         >
-          <div className="w-10 h-10 rounded-full bg-[#f0ecf9] flex items-center justify-center text-[#3525cd]">
+          <div className="w-10 h-10 rounded-full bg-[#f0ecf9] dark:bg-zinc-800 flex items-center justify-center text-[#3525cd] dark:text-indigo-400">
             <UploadCloud className="w-6 h-6" />
           </div>
           <div className="text-center">
-            <p className={`text-sm font-semibold ${fileName ? "text-[#006591]" : "text-[#3525cd]"}`}>
+            <p className={`text-sm font-semibold ${fileName ? "text-[#006591] dark:text-sky-400" : "text-[#3525cd] dark:text-indigo-400"}`}>
               {fileName ? `File selected: ${fileName}` : "Click to upload or drag and drop"}
             </p>
-            <p className="text-xs text-[#464555]">PDF, PNG, or JPG (max. 10MB)</p>
+            <p className="text-xs text-[#464555] dark:text-zinc-400">PDF, PNG, or JPG (max. 10MB)</p>
           </div>
           <input 
             {...register("file")}
@@ -120,7 +124,7 @@ export default function TeacherSignUpForm() {
 
       <button 
         type="submit" 
-        className="w-full h-12 bg-[#3525cd] text-white text-sm rounded-lg hover:shadow-md active:scale-[0.98] transition-all font-bold mt-2"
+        className="w-full h-12 bg-[#3525cd] dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white text-sm rounded-lg hover:shadow-md active:scale-[0.98] transition-all font-bold mt-2 cursor-pointer"
       >
         Apply for Teacher Account
       </button>

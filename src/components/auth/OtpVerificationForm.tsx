@@ -9,6 +9,7 @@ interface OtpVerificationFormProps {
   cooldown: number;
   onResend: () => void;
   onChangeEmail: () => void;
+  purpose?: "email" | "reset";
 }
 
 export default function OtpVerificationForm({
@@ -19,6 +20,7 @@ export default function OtpVerificationForm({
   cooldown,
   onResend,
   onChangeEmail,
+  purpose = "email",
 }: OtpVerificationFormProps) {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [localError, setLocalError] = useState("");
@@ -84,14 +86,17 @@ export default function OtpVerificationForm({
   return (
     <form onSubmit={handleFormSubmit} className="space-y-6">
       <div className="text-center space-y-2">
-        <div className="mx-auto flex items-center justify-center size-12 rounded-full bg-[#f1e8ff] text-[#6b38d4]">
+        <div className="mx-auto flex items-center justify-center size-12 rounded-full bg-[#f1e8ff] dark:bg-indigo-950/40 text-[#6b38d4] dark:text-indigo-400">
           <Mail className="size-6" />
         </div>
-        <h2 className="text-[28px] font-bold text-[#191c1e] tracking-tight">
-          Verify Your Email
+        <h2 className="text-[28px] font-bold text-[#191c1e] dark:text-white tracking-tight">
+          {purpose === "reset" ? "Reset Password" : "Verify Your Email"}
         </h2>
-        <p className="text-sm text-[#5f6470] max-w-[340px] mx-auto leading-relaxed">
-          Enter the 6-digit code we sent to <span className="font-semibold text-[#191c1e]">{email}</span>
+        <p className="text-sm text-[#5f6470] dark:text-zinc-400 max-w-[340px] mx-auto leading-relaxed">
+          {purpose === "reset"
+            ? "Enter the 6-digit password reset code we sent to "
+            : "Enter the 6-digit activation code we sent to "}
+          <span className="font-semibold text-[#191c1e] dark:text-white">{email}</span>
         </p>
       </div>
 
@@ -111,8 +116,8 @@ export default function OtpVerificationForm({
               onChange={(e) => handleOtpChange(idx, e.target.value)}
               onKeyDown={(e) => handleKeyDown(idx, e)}
               onPaste={idx === 0 ? handlePaste : undefined}
-              className={`size-11 sm:size-12 text-center text-lg font-bold bg-[#f1e8ff]/20 border ${displayError ? "border-red-500 ring-1 ring-red-500" : "border-[#c7ccd4]"
-                } rounded-lg focus:outline-none focus:border-[#6b38d4] focus:ring-2 focus:ring-[#6b38d4]/20 transition-all`}
+              className={`size-11 sm:size-12 text-center text-lg font-bold bg-[#f1e8ff]/20 dark:bg-zinc-900/40 border ${displayError ? "border-red-500 ring-1 ring-red-500" : "border-[#c7ccd4] dark:border-white/10"
+                } rounded-lg text-[#191c1e] dark:text-white focus:outline-none focus:border-[#6b38d4] dark:focus:border-[#6b38d4] focus:ring-2 focus:ring-[#6b38d4]/20 transition-all`}
             />
           ))}
         </div>
@@ -124,7 +129,7 @@ export default function OtpVerificationForm({
       <button
         type="submit"
         disabled={loading}
-        className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#6b38d4] hover:bg-[#5225af] active:bg-[#441a98] text-white font-semibold text-sm rounded-lg shadow-sm hover:shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+        className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#6b38d4] hover:bg-[#5225af] active:bg-[#441a98] text-white font-semibold text-sm rounded-lg shadow-sm hover:shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed group cursor-pointer"
       >
         {loading ? (
           <Loader2 className="size-4 animate-spin" />
@@ -137,13 +142,13 @@ export default function OtpVerificationForm({
       </button>
 
       <div className="text-center pt-2 space-y-3">
-        <div className="text-xs text-[#5f6470]">
+        <div className="text-xs text-[#5f6470] dark:text-zinc-400">
           Didn't receive the code?{" "}
           <button
             type="button"
             onClick={onResend}
             disabled={loading || cooldown > 0}
-            className="font-semibold text-[#6b38d4] hover:underline disabled:opacity-50 disabled:no-underline"
+            className="font-semibold text-[#6b38d4] dark:text-indigo-400 hover:underline disabled:opacity-50 disabled:no-underline cursor-pointer"
           >
             {cooldown > 0 ? `Resend Code (${cooldown}s)` : "Resend Code"}
           </button>
@@ -152,7 +157,7 @@ export default function OtpVerificationForm({
           <button
             type="button"
             onClick={onChangeEmail}
-            className="inline-flex items-center gap-2 text-xs font-semibold text-[#5f6470] hover:text-[#191c1e] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-[#5f6470] dark:text-zinc-400 hover:text-[#191c1e] dark:hover:text-white transition-colors cursor-pointer"
           >
             <ArrowLeft className="size-3" />
             Change Email Address

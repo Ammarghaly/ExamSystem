@@ -9,6 +9,7 @@ import {
   GraduationCap,
   BarChart,
   UserCheck,
+  CreditCard,
 } from "lucide-react";
 import { useUserStore } from "../../stores/use-user-store";
 import { Header } from "./Header";
@@ -59,6 +60,7 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
         { name: "Manage exams", href: "/teacher/exam-management", icon: FileText },
         { name: "My Groups", href: "/teacher/groups", icon: Users },
         { name: "Requests", href: "/teacher/admissions", icon: UserCheck },
+        { name: "Pricing Plans", href: "/teacher/pricing", icon: CreditCard },
         { name: "Profile", href: "/teacher/profile", icon: User },
       ]
     : [
@@ -67,6 +69,7 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
         { name: "My Groups", href: "/student/groups", icon: Users },
         { name: "Practice Exams", href: "/student/practice", icon: FileText },
         { name: "Results", href: "/student/results", icon: BarChart },
+        { name: "Pricing Plans", href: "/student/pricing", icon: CreditCard },
         { name: "Profile", href: "/student/profile", icon: User },
       ];
 
@@ -75,7 +78,7 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
       {/* Desktop Sidebar */}
       <aside className="w-52 lg:w-64 bg-surface border-r border-border flex-col hidden md:flex z-20 shrink-0 transition-all duration-300">
         <div className="h-16 flex items-center px-6 border-b border-border">
-  <Link to="/" className="flex items-center gap-3">
+     <Link to={isTeacher ? "/teacher/dashboard" : "/student/dashboard"} className="flex items-center gap-3">
     <img
       src={logoIcon}
       alt="Academix"

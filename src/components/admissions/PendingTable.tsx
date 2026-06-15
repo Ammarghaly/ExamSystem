@@ -23,14 +23,13 @@ export function PendingTable({
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr style={{ borderBottom: "1px solid var(--color-border)" }}>
+          <tr className="bg-indigo-100/80 dark:bg-indigo-950/40 border-b-2 border-indigo-200/80 dark:border-indigo-900/50">
             {["Student", "Requested Group", "Date Applied", "Actions"].map((h) => (
               <th
                 key={h}
-                className="text-left px-6 py-4 font-semibold uppercase tracking-widest"
+                className="text-left px-6 py-4 font-bold uppercase tracking-wider text-indigo-950 dark:text-indigo-200"
                 style={{
                   fontSize: "var(--text-small)",
-                  color: "var(--color-muted-foreground)",
                 }}
               >
                 {h}
@@ -61,19 +60,10 @@ export function PendingTable({
               return (
                 <tr
                   key={`${student._id}-${group._id}`}
-                  className="transition-colors border-t"
-                  style={{ borderColor: "var(--color-border)" }}
-                  onMouseEnter={(e) =>
-                    ((e.currentTarget as HTMLElement).style.backgroundColor =
-                      "var(--color-surface-container-low)")
-                  }
-                  onMouseLeave={(e) =>
-                    ((e.currentTarget as HTMLElement).style.backgroundColor =
-                      "transparent")
-                  }
+                  className="transition-colors border-t border-gray-100 dark:border-white/5 hover:bg-indigo-50/30 dark:hover:bg-indigo-950/10"
                 >
                   {/* Student */}
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 border-l-4 border-l-amber-500/80 dark:border-l-amber-500/60">
                     <div className="flex items-center gap-3">
                       {student.avatar !== "https://res.cloudinary.com/dgjw80t8x/image/upload/q_auto/f_auto/v1780575623/mostafamagdy_hsjbw3.png" ? (
                         <img
@@ -89,15 +79,20 @@ export function PendingTable({
                         </div>
                       )}
                       <div>
-                        <p
-                          className="font-semibold text-foreground"
-                          style={{
-                            fontSize: "var(--text-label)",
-                            color: "var(--color-on-surface)",
-                          }}
-                        >
-                          {student.name}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p
+                            className="font-semibold text-foreground"
+                            style={{
+                              fontSize: "var(--text-label)",
+                              color: "var(--color-on-surface)",
+                            }}
+                          >
+                            {student.name}
+                          </p>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border border-amber-200/50 dark:border-amber-900/40">
+                            Pending
+                          </span>
+                        </div>
                         <p
                           className="text-muted-foreground"
                           style={{
@@ -114,11 +109,9 @@ export function PendingTable({
                   {/* Group */}
                   <td className="px-6 py-4">
                     <span
-                      className="px-3 py-1 rounded-full font-medium"
+                      className="px-3 py-1 rounded-full font-medium border bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 border-amber-200/60 dark:border-amber-900/30"
                       style={{
                         fontSize: "var(--text-small)",
-                        backgroundColor: "var(--color-surface-container)",
-                        color: "var(--color-on-surface-variant)",
                       }}
                     >
                       {group.groupName}
@@ -138,43 +131,26 @@ export function PendingTable({
 
                   {/* Actions */}
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
                       {/* Accept */}
                       <button
                         disabled={isMutating}
                         onClick={() => onAccept({ groupId: group._id, studentId: student._id })}
-                        className="w-8 h-8 flex items-center justify-center rounded-full transition-all disabled:opacity-40"
-                        style={{ color: "var(--color-chart-2)" }}
+                        className="h-8 px-3.5 flex items-center justify-center gap-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all disabled:opacity-40 cursor-pointer"
                         title="Accept student"
-                        onMouseEnter={(e) =>
-                          ((e.currentTarget as HTMLElement).style.backgroundColor =
-                            "var(--color-surface-container)")
-                        }
-                        onMouseLeave={(e) =>
-                          ((e.currentTarget as HTMLElement).style.backgroundColor =
-                            "transparent")
-                        }
                       >
-                        <CheckCircle size={20} />
+                        <CheckCircle size={14} />
+                        Accept
                       </button>
 
                       {/* Reject */}
                       <button
                         disabled={isMutating}
                         onClick={() => onReject({ groupId: group._id, studentId: student._id })}
-                        className="w-8 h-8 flex items-center justify-center rounded-full transition-all disabled:opacity-40"
-                        style={{ color: "var(--color-error)" }}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-white/10 hover:bg-rose-50 dark:hover:bg-rose-950/20 text-gray-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-200 dark:hover:border-rose-900/30 transition-all disabled:opacity-40 cursor-pointer"
                         title="Reject student"
-                        onMouseEnter={(e) =>
-                          ((e.currentTarget as HTMLElement).style.backgroundColor =
-                            "var(--color-surface-container)")
-                        }
-                        onMouseLeave={(e) =>
-                          ((e.currentTarget as HTMLElement).style.backgroundColor =
-                            "transparent")
-                        }
                       >
-                        <XCircle size={20} />
+                        <XCircle size={16} />
                       </button>
                     </div>
                   </td>

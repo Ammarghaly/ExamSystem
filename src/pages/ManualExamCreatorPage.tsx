@@ -1,5 +1,5 @@
 import { TeacherLayout } from "../components/Layout/TeacherLayout";
-import { Pencil, Plus, Eye, Play } from "lucide-react";
+import { Pencil, Plus, Play } from "lucide-react";
 import { QuestionCard } from "../components/manual-exam/QuestionCard";
 import { PageHeader } from "../components/Common/PageHeader";
 import { PublishSettingsArea } from "../components/Common/PublishSettingsArea";
@@ -75,15 +75,15 @@ export default function ManualExamCreatorPage() {
                 <button
                   type="button"
                   onClick={addQuestion}
-                  className="w-full py-10 mt-6 border-2 border-dashed border-gray-200 rounded-2xl bg-white/50 flex flex-col items-center justify-center hover:bg-indigo-50/50 hover:border-indigo-300 transition-all group"
+                  className="w-full py-10 mt-6 border-2 border-dashed border-gray-200 dark:border-white/10 rounded-2xl bg-white/50 dark:bg-zinc-900/30 flex flex-col items-center justify-center hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 hover:border-indigo-300 dark:hover:border-indigo-800 transition-all group cursor-pointer"
                 >
-                  <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform mb-3">
+                  <div className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-950/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform mb-3">
                     <Plus className="w-6 h-6" />
                   </div>
-                  <span className="font-bold text-indigo-600 text-base">
+                  <span className="font-bold text-indigo-600 dark:text-indigo-400 text-base">
                     Add Question
                   </span>
-                  <span className="text-sm font-medium text-gray-500 mt-1">
+                  <span className="text-sm font-medium text-gray-500 dark:text-zinc-400 mt-1">
                     Multiple Choice or True/False
                   </span>
                 </button>
@@ -101,22 +101,7 @@ export default function ManualExamCreatorPage() {
                     </span>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    className="text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors px-4 py-2.5"
-                  >
-                    Save as Draft
-                  </button>
-                  <button
-                    type="button"
-                    className="flex items-center gap-2 px-5 py-2.5 border border-gray-200 rounded-xl text-sm font-bold text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors shadow-sm bg-white"
-                  >
-                    <Eye className="w-4 h-4" />
-                    Preview
-                  </button>
-                  <button
+                <button
                     type="button"
                     onClick={handleProceed}
                     className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 rounded-xl text-sm font-bold text-white hover:bg-indigo-700 transition-colors shadow-sm"
@@ -124,7 +109,6 @@ export default function ManualExamCreatorPage() {
                     Proceed to Publish
                     <Play className="w-4 h-4 fill-white" />
                   </button>
-                </div>
               </div>
             </>
           ) : (

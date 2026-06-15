@@ -28,6 +28,8 @@ export interface ManualExamDetails {
   accessCode: string;
   status: "Active" | "Closed" | "Hidden";
   teacherID: string;
+  allowReview?: boolean;
+  randomizeQuestions?: boolean;
 }
 
 export interface ManualQuestion {
@@ -77,13 +79,11 @@ export interface PublishAIExamPayload {
 }
 
 export const publishAIExam = async (
-  groupId: string,
+  groupId: string | undefined | null,
   payload: PublishAIExamPayload,
 ) => {
-  const response = await api.post(
-    `/exam/publish-ai?groupId=${groupId}`,
-    payload,
-  );
+  const url = groupId ? `/exam/publish-ai?groupId=${groupId}` : "/exam/publish-ai";
+  const response = await api.post(url, payload);
   return response.data;
 };
 

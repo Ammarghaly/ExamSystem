@@ -99,7 +99,7 @@ export default function LoginForm() {
   return (
     <div className="flex flex-col items-center w-full max-w-[430px]">
       {/* Sparkle icon */}
-      <div className="text-[#3730d4] mb-4">
+      <div className="text-[#3730d4] dark:text-indigo-400 mb-4">
         <svg width="40" height="36" viewBox="0 0 40 36" fill="currentColor">
           <path d="M25 2 L27 10 L35 12 L27 14 L25 22 L23 14 L15 12 L23 10 Z" />
           <path d="M10 18 L11 22 L15 23 L11 24 L10 28 L9 24 L5 23 L9 22 Z" />
@@ -107,22 +107,22 @@ export default function LoginForm() {
       </div>
 
 
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">
-        Welcome to Academix AI
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        Welcome to Academix 
       </h1>
-      <p className="text-gray-500 mb-8">Sign in to access your academic workspace.</p>
+      <p className="text-gray-500 dark:text-zinc-400 mb-8">Sign in to access your academic workspace.</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-5">
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">Email address</label>
-          <div className="flex items-center border border-gray-300 rounded-xl px-4 py-3 gap-3 focus-within:border-[#3730d4] transition-colors bg-white">
-            <Mail size={18} className="text-gray-400 shrink-0" />
+          <label className="text-sm font-medium text-gray-700 dark:text-zinc-300">Email address</label>
+          <div className="flex items-center border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 gap-3 focus-within:border-[#3730d4] dark:focus-within:border-indigo-500 transition-colors bg-white dark:bg-zinc-900/40">
+            <Mail size={18} className="text-gray-400 dark:text-zinc-500 shrink-0" />
             <input
               type="email"
               placeholder="name@institution.edu"
               {...register("email")}
-              className="flex-1 outline-none text-sm text-gray-800 placeholder:text-gray-400 bg-transparent"
+              className="flex-1 outline-none text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder-zinc-550 bg-transparent"
             />
           </div>
           {errors.email && (
@@ -132,19 +132,19 @@ export default function LoginForm() {
 
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700">Password</label>
-          <div className="flex items-center border border-gray-300 rounded-xl px-4 py-3 gap-3 focus-within:border-[#3730d4] transition-colors bg-white">
-            <Lock size={18} className="text-gray-400 shrink-0" />
+          <label className="text-sm font-medium text-gray-700 dark:text-zinc-300">Password</label>
+          <div className="flex items-center border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 gap-3 focus-within:border-[#3730d4] dark:focus-within:border-indigo-500 transition-colors bg-white dark:bg-zinc-900/40">
+            <Lock size={18} className="text-gray-400 dark:text-zinc-500 shrink-0" />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               {...register("password")}
-              className="flex-1 outline-none text-sm text-gray-800 placeholder:text-gray-400 bg-transparent"
+              className="flex-1 outline-none text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder-zinc-550 bg-transparent"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 dark:text-zinc-400 hover:text-gray-600 dark:hover:text-white cursor-pointer"
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -153,34 +153,34 @@ export default function LoginForm() {
             <span className="text-xs text-red-500">{errors.password.message}</span>
           )}
           <div className="flex justify-end">
-            <Link to="/forgot-password" className="text-sm text-[#3730d4] font-medium hover:underline">
+            <Link to="/forgot-password" className="text-sm text-[#3730d4] dark:text-indigo-400 font-medium hover:underline">
               Forgot password?
             </Link>
           </div>
         </div>
 
 
-        <label className="flex items-center gap-2 cursor-pointer">
+        <label className="flex items-center gap-2 cursor-pointer select-none">
           <input
             type="checkbox"
             {...register("rememberMe")}
-            className="w-4 h-4 rounded border-gray-300 accent-[#3730d4]"
+            className="w-4 h-4 rounded border-gray-300 dark:border-zinc-700 accent-[#3730d4] dark:accent-indigo-500"
           />
-          <span className="text-sm text-gray-600">Remember me</span>
+          <span className="text-sm text-gray-600 dark:text-zinc-400">Remember me</span>
         </label>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-[#3730d4] hover:bg-[#2e28b8] text-white font-semibold py-3.5 rounded-xl transition-colors disabled:opacity-60"
+          className="w-full bg-[#3730d4] hover:bg-[#2e28b8] dark:bg-indigo-650 dark:hover:bg-indigo-600 text-white font-semibold py-3.5 rounded-xl transition-colors disabled:opacity-60 cursor-pointer"
         >
           {isSubmitting ? "Signing in..." : "Sign In"}
         </button>
 
         {/* Register link */}
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-gray-500 dark:text-zinc-400">
           Don't have an account?{" "}
-          <Link to="/sign-up" className="text-[#3730d4] font-medium hover:underline">
+          <Link to="/sign-up" className="text-[#3730d4] dark:text-indigo-400 font-medium hover:underline">
             Sign up
           </Link>
         </p>

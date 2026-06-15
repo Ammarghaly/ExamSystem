@@ -65,8 +65,8 @@ export function ExamSettings() {
   ];
 
   return (
-    <div className="bg-white shadow-[0px_4px_20px_rgba(30,64,175,0.05)] rounded-xl p-6 border border-gray-200 flex flex-col h-full space-y-6">
-      <h3 className="text-[20px] font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-4">
+    <div className="bg-white dark:bg-[#1f2226] shadow-[0px_4px_20px_rgba(30,64,175,0.05)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] rounded-xl p-6 border border-gray-200 dark:border-white/10 flex flex-col h-full space-y-6">
+      <h3 className="text-[20px] font-bold text-gray-900 dark:text-white flex items-center gap-2 border-b border-gray-100 dark:border-white/5 pb-4">
         <Settings2 className="w-6 h-6 text-orange-600" />
         AI Question Settings
       </h3>
@@ -74,25 +74,25 @@ export function ExamSettings() {
       {/* 3x3 Distribution Matrix */}
       <div className="space-y-3">
         <div className="flex justify-between items-center">
-          <label className="block text-sm font-semibold text-gray-900">
+          <label className="block text-sm font-semibold text-gray-900 dark:text-white">
             Cognitive & Difficulty Matrix
           </label>
-          <span className="text-xs font-bold text-gray-500 bg-slate-100 px-2 py-1 rounded font-sans" dir="ltr" lang="en">
+          <span className="text-xs font-bold text-gray-500 dark:text-zinc-400 bg-slate-100 dark:bg-zinc-800 px-2 py-1 rounded font-sans" dir="ltr" lang="en">
             Total: {totalQuestions} Questions
           </span>
         </div>
 
-        <div className="overflow-x-auto border border-gray-100 rounded-xl">
+        <div className="overflow-x-auto border border-gray-100 dark:border-white/10 rounded-xl">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-gray-100">
-                <th className="p-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+              <tr className="bg-slate-50 dark:bg-zinc-900/50 border-b border-gray-100 dark:border-white/5">
+                <th className="p-3 text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider">
                   Level
                 </th>
                 {cognitiveLevels.map((cog) => (
                   <th
                     key={cog.key}
-                    className="p-3 text-xs font-bold text-gray-500 uppercase tracking-wider text-center"
+                    className="p-3 text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider text-center"
                   >
                     {cog.label}
                   </th>
@@ -103,9 +103,9 @@ export function ExamSettings() {
               {gridCells.map((row) => (
                 <tr
                   key={row.prefix}
-                  className="border-b border-gray-50 last:border-0 hover:bg-slate-50/50"
+                  className="border-b border-gray-50 dark:border-white/5 last:border-0 hover:bg-slate-50/50 dark:hover:bg-white/5"
                 >
-                  <td className="p-3 text-sm font-bold text-gray-700">
+                  <td className="p-3 text-sm font-bold text-gray-700 dark:text-zinc-300">
                     {row.label}
                   </td>
                   {cognitiveLevels.map((cog) => {
@@ -116,25 +116,26 @@ export function ExamSettings() {
                           <button
                             type="button"
                             onClick={() => decrementCell(cellKey)}
-                            className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-gray-600 transition-colors"
+                            className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-black dark:hover:bg-zinc-900 flex items-center justify-center text-gray-600 dark:text-white transition-colors"
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
-                          <input
+                         <input
                             type="number"
                             inputMode="numeric"
                             min="0"
                             {...register(`difficultyDistribution.${cellKey}`, {
-                              valueAsNumber: true,
+                            valueAsNumber: true,
                             })}
-                            className="w-10 text-center text-sm font-bold text-gray-900 focus:outline-none bg-transparent font-sans"
+                            className="w-9 border border-gray-200 rounded  text-center text-sm font-bold text-gray-900 dark:text-white focus:outline-none bg-transparent font-sans"
                             dir="ltr"
                             lang="en"
                           />
+
                           <button
                             type="button"
                             onClick={() => incrementCell(cellKey)}
-                            className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-gray-600 transition-colors"
+                            className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-black dark:hover:bg-zinc-900 flex items-center justify-center text-gray-600 dark:text-white transition-colors"
                           >
                             <Plus className="w-3.5 h-3.5" />
                           </button>
@@ -156,15 +157,15 @@ export function ExamSettings() {
       </div>
 
       {/* Question Formats Configuration */}
-      <div className="space-y-4 pt-4 border-t border-gray-100">
-        <label className="block text-sm font-semibold text-gray-900">
+      <div className="space-y-4 pt-4 border-t border-gray-100 dark:border-white/5">
+        <label className="block text-sm font-semibold text-gray-900 dark:text-white">
           Format Distribution
         </label>
 
         <div className="grid grid-cols-2 gap-4">
           {/* MCQ Count */}
-          <div className="bg-slate-50 p-4 rounded-xl border border-gray-200/60 space-y-1.5">
-            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide block">
+          <div className="bg-slate-50 dark:bg-zinc-900/40 p-4 rounded-xl border border-gray-200/60 dark:border-white/5 space-y-1.5">
+            <label className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wide block">
               MCQ Questions
             </label>
             <input
@@ -173,7 +174,7 @@ export function ExamSettings() {
               min="0"
               max={totalQuestions}
               {...register("mcqCount", { valueAsNumber: true })}
-              className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm font-bold text-gray-900 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-sans"
+              className="w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm font-bold text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-sans"
               dir="ltr"
               lang="en"
             />
@@ -186,14 +187,14 @@ export function ExamSettings() {
           </div>
 
           {/* TF Count (Calculated) */}
-          <div className="bg-slate-50 p-4 rounded-xl border border-gray-200/60 space-y-1.5 opacity-85">
-            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide block">
+          <div className="bg-slate-50 dark:bg-zinc-900/40 p-4 rounded-xl border border-gray-200/60 dark:border-white/5 space-y-1.5 opacity-85">
+            <label className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wide block">
               True / False
             </label>
-            <div className="w-full bg-slate-100 border border-gray-200/70 rounded-lg px-3 py-2 text-sm font-extrabold text-gray-600 select-none font-sans" dir="ltr" lang="en">
+            <div className="w-full bg-slate-100 dark:bg-zinc-800 border border-gray-200/70 dark:border-white/10 rounded-lg px-3 py-2 text-sm font-extrabold text-gray-600 dark:text-zinc-300 select-none font-sans" dir="ltr" lang="en">
               {tfCount} Questions
             </div>
-            <span className="text-[10px] text-gray-400 block font-medium">
+            <span className="text-[10px] text-gray-400 dark:text-zinc-500 block font-medium">
               Auto-computed from total
             </span>
           </div>

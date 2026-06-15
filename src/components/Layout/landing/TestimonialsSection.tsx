@@ -3,7 +3,7 @@ import { LANDING_IMAGES } from './landingAssets';
 const TESTIMONIALS = [
   {
     quote:
-      'Academix AI cut my exam prep from 4 hours to 20 minutes. The question quality is remarkably balanced.',
+      'Academix cut my exam prep from 4 hours to 20 minutes. The question quality is remarkably balanced.',
     name: 'Dr. Sarah Chen',
     role: 'Biology Professor, Stanford',
     avatar: LANDING_IMAGES.educator1,
@@ -30,7 +30,7 @@ export default function TestimonialsSection() {
       <div className="text-center mb-xl">
         <h2 className="font-display text-display mb-md">Loved by Educators</h2>
         <p className="font-body text-h3 text-on-surface-variant max-w-2xl mx-auto">
-          Hear from teachers and professors who transformed their workflow with Academix AI.
+          Hear from teachers and professors who transformed their workflow with Academix.
         </p>
       </div>
 

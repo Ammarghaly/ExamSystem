@@ -68,10 +68,35 @@ export function Header({ title, role }: HeaderProps) {
 
 
          {currentUser?.available_credits !== undefined && (
-          <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-100/20 text-yellow-600 text-xs font-bold border border-yellow-500/30">
-            <img src={img} className="w-6 h-6" alt="Bolt" />
-            {currentUser.available_credits}
-          </span>
+          <div
+            className="relative group select-none cursor-pointer"
+            onClick={() => navigate(role === "teacher" ? "/teacher/pricing" : "/student/pricing")}
+          >
+            <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-100/20 text-yellow-600 text-xs font-bold border border-yellow-500/30 hover:bg-yellow-100/30 transition-colors">
+              <img src={img} className="w-6 h-6" alt="Bolt" />
+              {currentUser.available_credits}
+            </span>
+            
+            {role === "student" && (
+              <div className="absolute right-0 top-full mt-2 w-64 p-4 bg-white dark:bg-zinc-800 rounded-xl border border-border shadow-xl hidden group-hover:block z-50 text-xs text-foreground space-y-2 pointer-events-none">
+                <div className="font-bold text-sm border-b border-border pb-1.5 mb-1.5 text-primary flex items-center gap-1">
+                  <img src={img} className="w-4 h-4" alt="Bolt" />
+                  Credits Breakdown
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground font-medium">Subscription Credits:</span>
+                  <span className="font-bold text-foreground">{currentUser.subscription_credits ?? 0}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground font-medium">Purchased Credits:</span>
+                  <span className="font-bold text-foreground">{currentUser.purchased_credits ?? 0}</span>
+                </div>
+                <div className="text-[10px] text-muted-foreground border-t border-border pt-1.5 leading-relaxed">
+                  * Subscription credits reset at renewal. Purchased credits never expire and are used after subscription credits are depleted.
+                </div>
+              </div>
+            )}
+          </div>
         )}
 
 

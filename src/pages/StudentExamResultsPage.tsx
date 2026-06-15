@@ -145,14 +145,22 @@ export default function StudentExamResultsPage() {
           </div>
         </div>
 
-        <QuestionAnalysisHeader
-          currentFilter={filter}
-          onFilterChange={setFilter}
-          counts={counts}
-        />
-
-        <QuestionAnalysisList questions={filteredQuestions} />
-
+        {resultData.exam?.allowReview !== false ? (
+          <>
+            <QuestionAnalysisHeader
+              currentFilter={filter}
+              onFilterChange={setFilter}
+              counts={counts}
+            />
+            <QuestionAnalysisList questions={filteredQuestions} />
+          </>
+        ) : (
+          <div className="bg-white dark:bg-[#1f2226] rounded-2xl p-8 border border-gray-100 dark:border-white/5 shadow-sm text-center">
+            <p className="text-gray-500 dark:text-zinc-400 font-medium">
+              Review and correct answers for this exam are disabled by the instructor.
+            </p>
+          </div>
+        )}
       </div>
     </StudentLayout>
   );

@@ -7,6 +7,8 @@ export interface User {
   role?: string;
   avatar?: string;
   available_credits?: number;
+  subscription_credits?: number;
+  purchased_credits?: number;
   subscription_type?: string;
   subjects_taught?: string;
   [key: string]: any;

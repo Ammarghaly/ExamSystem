@@ -21,14 +21,13 @@ export function RejectedTable({
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr style={{ borderBottom: "1px solid var(--color-border)" }}>
+          <tr className="bg-rose-100/80 dark:bg-rose-950/40 border-b-2 border-rose-200/80 dark:border-rose-900/50">
             {["Student", "Group", "Rejection Date", "Actions"].map((h) => (
               <th
                 key={h}
-                className="text-left px-6 py-4 font-semibold uppercase tracking-widest"
+                className="text-left px-6 py-4 font-bold uppercase tracking-wider text-rose-950 dark:text-rose-200"
                 style={{
                   fontSize: "var(--text-small)",
-                  color: "var(--color-muted-foreground)",
                 }}
               >
                 {h}
@@ -59,19 +58,10 @@ export function RejectedTable({
               return (
                 <tr
                   key={`${student._id}-${group._id}`}
-                  className="transition-colors border-t"
-                  style={{ borderColor: "var(--color-border)" }}
-                  onMouseEnter={(e) =>
-                    ((e.currentTarget as HTMLElement).style.backgroundColor =
-                      "var(--color-surface-container-low)")
-                  }
-                  onMouseLeave={(e) =>
-                    ((e.currentTarget as HTMLElement).style.backgroundColor =
-                      "transparent")
-                  }
+                  className="transition-all border-t border-gray-100 dark:border-white/5 bg-rose-50/10 dark:bg-rose-950/5 hover:bg-rose-50/40 dark:hover:bg-rose-950/15 opacity-75 hover:opacity-100"
                 >
                   {/* Student */}
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 border-l-4 border-l-rose-500/80 dark:border-l-rose-500/60">
                     <div className="flex items-center gap-3">
                       {student.avatar ? (
                         <img
@@ -87,15 +77,20 @@ export function RejectedTable({
                         </div>
                       )}
                       <div>
-                        <p
-                          className="font-semibold"
-                          style={{
-                            fontSize: "var(--text-label)",
-                            color: "var(--color-on-surface-variant)",
-                          }}
-                        >
-                          {student.name}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p
+                            className="font-semibold"
+                            style={{
+                              fontSize: "var(--text-label)",
+                              color: "var(--color-on-surface-variant)",
+                            }}
+                          >
+                            {student.name}
+                          </p>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border border-rose-200/50 dark:border-rose-900/40">
+                            Rejected
+                          </span>
+                        </div>
                         <p
                           style={{
                             fontSize: "var(--text-small)",
@@ -111,11 +106,9 @@ export function RejectedTable({
                   {/* Group */}
                   <td className="px-6 py-4">
                     <span
-                      className="px-3 py-1 rounded-full font-medium"
+                      className="px-3 py-1 rounded-full font-medium border bg-rose-50 dark:bg-rose-950/20 text-rose-800 dark:text-rose-300 border-rose-200/60 dark:border-rose-900/30"
                       style={{
                         fontSize: "var(--text-small)",
-                        backgroundColor: "var(--color-surface-container)",
-                        color: "var(--color-on-surface-variant)",
                       }}
                     >
                       {group.groupName}
@@ -140,23 +133,14 @@ export function RejectedTable({
                       onClick={() =>
                         onReAccept({ groupId: group._id, studentId: student._id })
                       }
-                      className="flex items-center gap-1.5 font-semibold transition-colors disabled:opacity-40"
+                      className="flex items-center gap-1.5 font-bold transition-all disabled:opacity-40 cursor-pointer text-xs px-3 py-1.5 rounded-lg border border-primary/20 hover:bg-primary/5 dark:hover:bg-primary/10"
                       style={{
-                        fontSize: "var(--text-label)",
                         color: "var(--color-primary)",
                         fontFamily: "var(--font-primary)",
                       }}
-                      onMouseEnter={(e) =>
-                        ((e.currentTarget as HTMLElement).style.color =
-                          "var(--color-primary-container)")
-                      }
-                      onMouseLeave={(e) =>
-                        ((e.currentTarget as HTMLElement).style.color =
-                          "var(--color-primary)")
-                      }
                     >
-                      <UserCheck size={15} />
-                      Accept Student
+                      <UserCheck size={14} />
+                      Restore Student
                     </button>
                   </td>
                 </tr>

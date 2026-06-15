@@ -5,6 +5,8 @@ import { ExamSettings } from '../components/generate-exam/ExamSettings';
 import { PublishSettingsArea } from '../components/Common/PublishSettingsArea';
 import { FormProvider } from 'react-hook-form';
 import { useGenerateExam } from '../hooks/useGenerateExam';
+import InsufficientCreditsModal from '../components/generate-exam/InsufficientCreditsModal';
+import { useNavigate } from 'react-router-dom';
 
 export default function GenerateExamPage() {
   const {
@@ -14,12 +16,29 @@ export default function GenerateExamPage() {
     onSubmit,
     handleNextStep,
     isStudent,
+    showInsufficientCreditsModal,
+    setShowInsufficientCreditsModal,
+    creditsRequired,
+    userCredits,
   } = useGenerateExam();
 
+  const navigate = useNavigate();
   const Layout = isStudent ? StudentLayout : TeacherLayout;
+
+  const handleGoToPricing = () => {
+    setShowInsufficientCreditsModal(false);
+    navigate(isStudent ? '/student/pricing' : '/teacher/pricing');
+  };
 
   return (
     <Layout title="Generate Exam">
+      <InsufficientCreditsModal
+        isOpen={showInsufficientCreditsModal}
+        onClose={() => setShowInsufficientCreditsModal(false)}
+        requiredCredits={creditsRequired}
+        availableCredits={userCredits}
+        onGoToPricing={handleGoToPricing}
+      />
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} className="flex-1 overflow-y-auto p-6 md:p-10 pb-24 relative bg-slate-50">
           

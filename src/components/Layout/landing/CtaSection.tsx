@@ -6,7 +6,7 @@ export default function CtaSection() {
           Ready to transform your assessments?
         </h2>
         <p className="font-body text-h3 mb-xl opacity-80">
-          Join 12,000+ educators who are already saving 10+ hours a week with Academix AI.
+          Join 12,000+ educators who are already saving 10+ hours a week with Academix.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-md">
           <a

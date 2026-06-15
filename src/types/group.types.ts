@@ -7,8 +7,8 @@ export interface Student {
   id: string;
   name: string;
   initials: string;
-  avatarColor: string;
   avatar?: string;
+  avatarColor?: string;
   studentId: string;    // my edit
   joinDate: string;
   status: StudentStatus;

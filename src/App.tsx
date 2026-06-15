@@ -26,6 +26,8 @@ import GroupDetailsPage from "./pages/GroupDetailsPage";
 import StudentPracticeExamsPage from "./pages/StudentPracticeExamsPage";
 import StudentResultsPage from "./pages/StudentResultsPage";
 import StudentAdmissionsPage from "./pages/StudentAdmissionsPage";
+import PricingPage from "./pages/PricingPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
@@ -162,6 +164,23 @@ function App() {
           }
         />
 
+        <Route
+          path="/teacher/pricing"
+          element={
+            <ProtectedRoute>
+              <PricingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teacher/checkout"
+          element={
+            <ProtectedRoute>
+              <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Student Routes */}
         <Route
           path="/student/dashboard"
@@ -249,6 +268,23 @@ function App() {
           element={
             <ProtectedRoute>
               <UserProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/student/pricing"
+          element={
+            <ProtectedRoute>
+              <PricingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/checkout"
+          element={
+            <ProtectedRoute>
+              <CheckoutPage />
             </ProtectedRoute>
           }
         />

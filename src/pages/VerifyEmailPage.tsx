@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { GraduationCap } from "lucide-react";
 
 import { verifyOtp, resendActivationOtp } from "../api/auth";
 import OtpVerificationForm from "../components/auth/OtpVerificationForm";
+import logoIcon from "../assets/icon-logo.png";
 
 export default function VerifyEmailPage() {
   const navigate = useNavigate();
@@ -74,20 +74,22 @@ export default function VerifyEmailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-[#f3f5f8] via-[#eef2f9] to-[#f4f2fc] flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-tr from-[#f3f5f8] via-[#eef2f9] to-[#f4f2fc] dark:from-[#101214] dark:via-[#131518] dark:to-[#171520] flex flex-col items-center justify-center p-4 selection:bg-[#6b38d4]/10 selection:text-[#6b38d4] dark:selection:bg-[#6b38d4]/20 dark:selection:text-indigo-400">
       <div className="w-full max-w-[440px] flex flex-col items-center space-y-6 py-8">
         {/* Logo */}
         <div className="flex flex-col items-center space-y-2 select-none">
-          <div className="flex items-center justify-center size-12 rounded-xl bg-[#3b2fc9] text-white shadow-md shadow-[#3b2fc9]/20">
-            <GraduationCap className="size-7" />
-          </div>
-          <h1 className="text-xl font-bold text-[#3b2fc9] tracking-tight">
-            Academix
+          <img
+            src={logoIcon}
+            alt="Academix"
+            className="w-14 h-14 object-contain"
+          />
+          <h1 className="text-xl font-bold text-[#3b2fc9] dark:text-indigo-450 tracking-tight">
+            Academix 
           </h1>
         </div>
 
         {/* Card */}
-        <div className="w-full bg-white border border-[#eceff3] rounded-2xl p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.03)]">
+        <div className="w-full bg-white dark:bg-[#1f2226] border border-[#eceff3] dark:border-white/5 rounded-2xl p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-300">
           <OtpVerificationForm
             email={email}
             onSubmit={handleVerify}

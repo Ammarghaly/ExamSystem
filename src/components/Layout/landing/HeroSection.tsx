@@ -56,7 +56,7 @@ export default function HeroSection() {
               </div>
               <img
                 src={LANDING_IMAGES.heroDashboard}
-                alt="Academix AI dashboard preview on a laptop"
+                alt="Academix dashboard preview on a laptop"
                 className="w-full aspect-video object-cover"
               />
             </div>

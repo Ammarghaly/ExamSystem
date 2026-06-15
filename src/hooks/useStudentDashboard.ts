@@ -45,12 +45,8 @@ export function useStudentDashboard() {
     setIsJoining(true);
     try {
       const response = await joinGroup(groupCode.trim());
-      if (response.success) {
-        toast.success(response.message || "Join request sent successfully!");
-        setGroupCode("");
-      } else {
-        toast.error(response.message || "Failed to join group");
-      }
+      toast.success(response.message || "Join request sent successfully!");
+      setGroupCode("");
     } catch (err: any) {
       toast.error(err.response?.data?.message || err.message || "Failed to join group");
     } finally {

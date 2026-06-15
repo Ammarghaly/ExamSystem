@@ -159,6 +159,8 @@ export function useManualExam() {
           accessCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
           status: "Active" as const,
           teacherID,
+          allowReview: data.allowReview,
+          randomizeQuestions: data.randomizeQuestions,
         },
         questions: mappedQuestions,
       };
