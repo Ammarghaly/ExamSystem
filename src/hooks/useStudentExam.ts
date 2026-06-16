@@ -29,8 +29,17 @@ export function useStudentExam() {
       if (res.data) {
         setAttemptId(res.data.attemptId);
         setExamInfo(res.data.exam);
-        const remaining = res.data.exam.closingAt - Math.floor(Date.now() / 1000);
-        setTimeLeft(Math.max(0, remaining));
+        
+        const startTimeMs = res.data.startTime ? new Date(res.data.startTime).getTime() : Date.now();
+        const durationMinutes = res.data.exam.durationMinutes || 60;
+        const durationMs = durationMinutes * 60 * 1000;
+        const closingAtMs = (res.data.exam.closingAt || 0) * 1000;
+        
+        const attemptEndTime = startTimeMs + durationMs;
+        const endTimestamp = (closingAtMs > 0 && closingAtMs > startTimeMs) ? Math.min(attemptEndTime, closingAtMs) : attemptEndTime;
+        
+        const remaining = Math.max(0, Math.floor((endTimestamp - Date.now()) / 1000));
+        setTimeLeft(remaining);
         
         // Map backend questions to frontend format
         const mapped = res.data.questions.map((q: any) => ({
