@@ -180,6 +180,7 @@ export default function ChatsPage() {
     isError: isGroupsError,
   } = useQuery({
     queryKey: ["myGroups"],
+    queryFn: getMyGroups,
   });
 
   // 2. GET messages for selected group from backend API with 20-item pagination
