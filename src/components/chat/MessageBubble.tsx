@@ -22,8 +22,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
 
   if (isMine) {
     return (
-      <div className="flex flex-col items-end max-w-[85%] sm:max-w-[75%] ml-auto">
-        <div className="flex items-baseline gap-2 mb-1 px-1">
+      <div className="flex flex-col items-end max-w-[85%] sm:max-w-[70%] ml-auto min-w-0">
+        <div className="flex items-center gap-2 mb-1 px-1">
           <span className="text-[10px] text-muted-foreground">
             {message.timestamp}
           </span>
@@ -31,7 +31,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
             You
           </span>
         </div>
-        <div className="p-3.5 bg-primary text-white rounded-2xl rounded-tr-xs text-sm leading-relaxed shadow-2xs break-words">
+        <div className="p-3.5 bg-primary text-white rounded-2xl rounded-tr-xs text-sm leading-relaxed shadow-2xs [overflow-wrap:anywhere] break-words whitespace-pre-wrap max-w-full w-fit">
           {message.text}
         </div>
         {message.isSeen !== undefined && (
@@ -49,7 +49,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   }
 
   return (
-    <div className="flex items-start gap-3 max-w-[85%] sm:max-w-[75%]">
+    <div className="flex items-start gap-2.5 max-w-[85%] sm:max-w-[70%] min-w-0">
       <img
         src={senderAvatar}
         alt={message.senderName}
@@ -59,8 +59,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
             : "border-border/40"
         }`}
       />
-      <div>
-        <div className="flex items-center gap-2 mb-1 px-1">
+      <div className="flex flex-col items-start min-w-0 max-w-full">
+        <div className="flex items-center gap-2 mb-1 px-1 flex-wrap">
           <span className="text-xs font-semibold text-foreground">
             {message.senderName}
           </span>
@@ -71,13 +71,13 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
             </span>
           )}
 
-          <span className="text-[10px] text-muted-foreground ml-auto">
+          <span className="text-[10px] text-muted-foreground">
             {message.timestamp}
           </span>
         </div>
 
         <div
-          className={`p-3.5 rounded-2xl rounded-tl-xs text-sm leading-relaxed shadow-2xs break-words border ${
+          className={`p-3.5 rounded-2xl rounded-tl-xs text-sm leading-relaxed shadow-2xs [overflow-wrap:anywhere] break-words whitespace-pre-wrap max-w-full w-fit border ${
             isTeacher
               ? "bg-gradient-to-r from-indigo-50 to-purple-50/90 dark:from-indigo-950/80 dark:to-purple-950/50 text-foreground border-indigo-200/90 dark:border-indigo-700/80"
               : "bg-surface-container-low dark:bg-slate-800 text-foreground border-border/30"
