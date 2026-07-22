@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AppLayout } from "../components/Layout/AppLayout";
 import { getMyGroups } from "../api/groups";
@@ -10,6 +10,9 @@ import { ConversationList } from "../components/chat/ConversationList";
 import { ChatWindow } from "../components/chat/ChatWindow";
 import { EmptyState } from "../components/chat/EmptyState";
 import { Loader2 } from "lucide-react";
+import { joinGroup, leaveGroup, sendMessage } from "@/socket/chat.socket";
+import { connectSocket } from "@/socket/socketConnection";
+import { socket } from "@/socket/socket";
 
 export default function ChatsPage() {
   const { currentUser } = useUserStore();
@@ -20,6 +23,13 @@ export default function ChatsPage() {
   const [localMessagesMap, setLocalMessagesMap] = useState<
     Record<string, Message[]>
   >({});
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token && !socket.connected) {
+      connectSocket(token);
+    }
+  }, []);
 
   // 1. GET joined groups from backend API (GET only)
   const {
@@ -32,14 +42,21 @@ export default function ChatsPage() {
   });
 
   // 2. GET messages for selected group from backend API (GET only)
-  const {
-    data: messagesResponse,
-    isLoading: isLoadingMessages,
-  } = useQuery({
+  const { data: messagesResponse, isLoading: isLoadingMessages } = useQuery({
     queryKey: ["groupMessages", selectedId],
     queryFn: () => getGroupMessages(selectedId!),
     enabled: !!selectedId,
   });
+
+  useEffect(() => {
+    if (!selectedId) return;
+    joinGroup(selectedId, (ack) => {
+      console.log("Joined group ack:", ack);
+    });
+    return () => {
+      leaveGroup(selectedId);
+    };
+  }, [selectedId]);
 
   const backendGroups = groupsResponse?.data || [];
 
@@ -126,6 +143,11 @@ export default function ChatsPage() {
   // Local-only message sending (no POST API calls)
   const handleSendMessage = (text: string) => {
     if (!selectedId) return;
+
+    // Send message over socket to server
+    sendMessage(selectedId, text, (ack: any) => {
+      console.log("Message sent acknowledgment from server:", ack);
+    });
 
     const now = new Date();
     const timeString = now.toLocaleTimeString([], {

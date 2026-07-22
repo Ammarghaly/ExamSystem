@@ -1,5 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Send, Smile, Paperclip } from "lucide-react";
+import { offReceiveMessage, onReceiveMessage } from "@/socket/chat.socket";
 
 interface MessageComposerProps {
   onSendMessage: (text: string) => void;
@@ -20,10 +21,22 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${Math.min(
         textareaRef.current.scrollHeight,
-        128
+        128,
       )}px`;
     }
   };
+
+  useEffect(() => {
+    const handleReceive = (msg: any) => {
+      console.log("Message received from server: ", msg);
+    };
+
+    onReceiveMessage(handleReceive);
+
+    return () => {
+      offReceiveMessage(handleReceive);
+    };
+  }, []);
 
   const handleSend = () => {
     if (!text.trim()) return;
