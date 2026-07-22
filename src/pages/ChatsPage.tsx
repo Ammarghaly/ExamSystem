@@ -39,6 +39,48 @@ export default function ChatsPage() {
     }
   }, []);
 
+  const parseMessage = (m: any): Message => {
+    const senderObj = m.sender || (typeof m.senderId === "object" ? m.senderId : null);
+    const rawSenderId = senderObj?.id || senderObj?._id || m.senderId;
+    const senderIdStr = rawSenderId ? rawSenderId.toString() : "";
+    const currentUserIdStr = currentUserId ? currentUserId.toString() : "";
+
+    const isMine = Boolean(
+      senderIdStr && currentUserIdStr && senderIdStr === currentUserIdStr,
+    );
+
+    const senderRole = senderObj?.role || m.senderRole;
+    const senderName = senderObj?.name || m.senderName || "Member";
+    const isTeacher =
+      senderRole?.toLowerCase() === "teacher" ||
+      senderName.startsWith("Dr.") ||
+      senderName.startsWith("Prof.");
+
+    const formattedTime = m.createdAt
+      ? new Date(m.createdAt).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+    return {
+      id: m.id || m._id || `msg-${Date.now()}`,
+      conversationId: m.groupId,
+      senderId: senderIdStr,
+      senderName,
+      senderAvatar: senderObj?.avatar || m.senderAvatar || "",
+      senderRole: senderRole || "Student",
+      isTeacher: Boolean(isTeacher),
+      text: m.content || m.text || "",
+      timestamp: formattedTime,
+      isMine,
+      isSeen: true,
+    };
+  };
+
   // Real-time socket message listener
   useEffect(() => {
     const handleIncomingMessage = (m: any) => {
@@ -46,45 +88,11 @@ export default function ChatsPage() {
       const groupId = m.groupId;
       if (!groupId) return;
 
-      const senderId = m.sender?.id || m.senderId;
-      const isMine =
-        senderId &&
-        currentUserId &&
-        senderId.toString() === currentUserId.toString();
-
-      const senderRole = m.sender?.role || m.senderRole;
-      const isTeacher =
-        senderRole?.toLowerCase() === "teacher" ||
-        m.sender?.name?.startsWith("Dr.") ||
-        m.sender?.name?.startsWith("Prof.");
-
-      const formattedTime = m.createdAt
-        ? new Date(m.createdAt).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-        : new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-
-      const newMsg: Message = {
-        id: m.id || m._id || `msg-${Date.now()}`,
-        conversationId: groupId,
-        senderId: senderId || "",
-        senderName: m.sender?.name || "Member",
-        senderAvatar: m.sender?.avatar || "",
-        senderRole: senderRole || "Student",
-        isTeacher: Boolean(isTeacher),
-        text: m.content || "",
-        timestamp: formattedTime,
-        isMine: Boolean(isMine),
-        isSeen: true,
-      };
+      const newMsg = parseMessage(m);
 
       setLocalMessagesMap((prev) => {
         const currentList = prev[groupId] || [];
-        if (isMine) {
+        if (newMsg.isMine) {
           const hasTemp = currentList.some((msg) =>
             msg.id.startsWith("local-msg-"),
           );
@@ -147,40 +155,7 @@ export default function ChatsPage() {
   const rawMessages = messagesResponse?.data || [];
   const fetchedMessages: Message[] = [...rawMessages]
     .reverse()
-    .map((m: any) => {
-      const senderId = m.sender?.id || m.senderId;
-      const isMine =
-        senderId &&
-        currentUserId &&
-        senderId.toString() === currentUserId.toString();
-
-      const senderRole = m.sender?.role || m.senderRole;
-      const isTeacher =
-        senderRole?.toLowerCase() === "teacher" ||
-        m.sender?.name?.startsWith("Dr.") ||
-        m.sender?.name?.startsWith("Prof.");
-
-      const formattedTime = m.createdAt
-        ? new Date(m.createdAt).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-        : "";
-
-      return {
-        id: m.id || m._id,
-        conversationId: m.groupId,
-        senderId: senderId || "",
-        senderName: m.sender?.name || "Member",
-        senderAvatar: m.sender?.avatar || "",
-        senderRole: senderRole || "Student",
-        isTeacher: Boolean(isTeacher),
-        text: m.content || "",
-        timestamp: formattedTime,
-        isMine: Boolean(isMine),
-        isSeen: true,
-      };
-    });
+    .map((m: any) => parseMessage(m));
 
   // Combine fetched messages with locally sent messages for active group
   const activeMessages = selectedId
