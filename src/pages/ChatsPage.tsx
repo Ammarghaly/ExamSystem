@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { AppLayout } from "../components/Layout/AppLayout";
 import { getMyGroups } from "../api/groups";
 import { getGroupMessages } from "../api/chat";
@@ -180,14 +180,28 @@ export default function ChatsPage() {
     isError: isGroupsError,
   } = useQuery({
     queryKey: ["myGroups"],
-    queryFn: getMyGroups,
   });
 
-  // 2. GET messages for selected group from backend API (GET only)
-  const { data: messagesResponse, isLoading: isLoadingMessages } = useQuery({
+  // 2. GET messages for selected group from backend API with 20-item pagination
+  const {
+    data: messagesInfiniteData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingMessages,
+  } = useInfiniteQuery({
     queryKey: ["groupMessages", selectedId],
-    queryFn: () => getGroupMessages(selectedId!),
+    queryFn: ({ pageParam = 1 }) =>
+      getGroupMessages(selectedId!, pageParam, 20),
+    getNextPageParam: (lastPage, allPages) => {
+      const messages = lastPage?.data || [];
+      if (messages.length === 20) {
+        return allPages.length + 1;
+      }
+      return undefined;
+    },
     enabled: !!selectedId,
+    initialPageParam: 1,
   });
 
   useEffect(() => {
@@ -202,11 +216,14 @@ export default function ChatsPage() {
 
   const backendGroups = groupsResponse?.data || [];
 
-  // Map backend messages array (backend returns newest first, reverse for chronological order)
-  const rawMessages = messagesResponse?.data || [];
-  const fetchedMessages: Message[] = [...rawMessages]
+  // Map backend messages array (reverse pages so oldest fetched page comes first, reverse messages for chronological order)
+  const pagesList = messagesInfiniteData?.pages || [];
+  const fetchedMessages: Message[] = [...pagesList]
     .reverse()
-    .map((m: any) => parseMessage(m));
+    .flatMap((pageResp: any) => {
+      const rawMsgs = pageResp?.data || [];
+      return [...rawMsgs].reverse().map((m: any) => parseMessage(m));
+    });
 
   // Combine fetched messages with locally sent messages for active group
   const activeMessages = selectedId
@@ -342,6 +359,9 @@ export default function ChatsPage() {
                 typerAvatar={
                   selectedId ? typingMap[selectedId]?.avatar : undefined
                 }
+                onLoadMore={() => fetchNextPage()}
+                hasMore={Boolean(hasNextPage)}
+                isLoadingMore={isFetchingNextPage}
               />
             )
           ) : (

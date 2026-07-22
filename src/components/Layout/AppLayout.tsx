@@ -13,7 +13,6 @@ import {
   MoreHorizontal,
   MessageSquare,
   PanelLeftClose,
-  PanelLeftOpen,
 } from "lucide-react";
 import { useUserStore } from "../../stores/use-user-store";
 import { useLayoutStore } from "../../stores/use-layout-store";
@@ -22,7 +21,13 @@ import CreateGroupModal from "../groups/CreateGroupModal";
 import logoIcon from "../../assets/icon-logo.png";
 import { getMe } from "../../api/auth";
 
-export function AppLayout({ children, title }: { children: React.ReactNode; title?: string }) {
+export function AppLayout({
+  children,
+  title,
+}: {
+  children: React.ReactNode;
+  title?: string;
+}) {
   const location = useLocation();
   const { currentUser, setCurrentUser } = useUserStore();
   const { isSidebarCollapsed, toggleSidebar } = useLayoutStore();
@@ -30,7 +35,8 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
   const [showMoreMenu, setShowMoreMenu] = useState(false);
 
   React.useEffect(() => {
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
     if (token) {
       getMe()
         .then((data) => {
@@ -46,7 +52,11 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
 
   const navItems = isTeacher
     ? [
-        { href: "/teacher/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+        {
+          href: "/teacher/dashboard",
+          icon: LayoutDashboard,
+          label: "Dashboard",
+        },
         { href: "/teacher/chats", icon: MessageSquare, label: "Chats" },
         { href: "/teacher/generate-exam", icon: Sparkles, label: "Generate" },
         { href: "/teacher/groups", icon: Users, label: "Groups" },
@@ -54,7 +64,11 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
     : [
         { href: "/student/dashboard", icon: GraduationCap, label: "Learning" },
         { href: "/student/chats", icon: MessageSquare, label: "Chats" },
-        { href: "/student/generate-exam/ai-generate", icon: Sparkles, label: "Generate" },
+        {
+          href: "/student/generate-exam/ai-generate",
+          icon: Sparkles,
+          label: "Generate",
+        },
         { href: "/student/groups", icon: Users, label: "Groups" },
       ];
 
@@ -74,19 +88,39 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
 
   const sidebarItems = isTeacher
     ? [
-        { name: "Dashboard", href: "/teacher/dashboard", icon: LayoutDashboard },
+        {
+          name: "Dashboard",
+          href: "/teacher/dashboard",
+          icon: LayoutDashboard,
+        },
         { name: "Chats", href: "/teacher/chats", icon: MessageSquare },
-        { name: "Generate Exam", href: "/teacher/generate-exam", icon: Sparkles },
-        { name: "Manage exams", href: "/teacher/exam-management", icon: FileText },
+        {
+          name: "Generate Exam",
+          href: "/teacher/generate-exam",
+          icon: Sparkles,
+        },
+        {
+          name: "Manage exams",
+          href: "/teacher/exam-management",
+          icon: FileText,
+        },
         { name: "My Groups", href: "/teacher/groups", icon: Users },
         { name: "Requests", href: "/teacher/admissions", icon: UserCheck },
         { name: "Pricing Plans", href: "/teacher/pricing", icon: CreditCard },
         { name: "Profile", href: "/teacher/profile", icon: User },
       ]
     : [
-        { name: "My Learning", href: "/student/dashboard", icon: GraduationCap },
+        {
+          name: "My Learning",
+          href: "/student/dashboard",
+          icon: GraduationCap,
+        },
         { name: "Chats", href: "/student/chats", icon: MessageSquare },
-        { name: "Generate Exam", href: "/student/generate-exam/ai-generate", icon: Sparkles },
+        {
+          name: "Generate Exam",
+          href: "/student/generate-exam/ai-generate",
+          icon: Sparkles,
+        },
         { name: "My Groups", href: "/student/groups", icon: Users },
         { name: "Practice Exams", href: "/student/practice", icon: FileText },
         { name: "Results", href: "/student/results", icon: BarChart },
@@ -221,14 +255,18 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {moreItems.map(({ href, icon: Icon, label }) => {
-                  const isActive = location.pathname === href || location.pathname.startsWith(href + "/");
+                  const isActive =
+                    location.pathname === href ||
+                    location.pathname.startsWith(href + "/");
                   return (
                     <Link
                       key={href}
                       to={href}
                       onClick={() => setShowMoreMenu(false)}
                       className={`flex flex-col items-center justify-center p-3 rounded-xl gap-1.5 transition-all ${
-                        isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted"
+                        isActive
+                          ? "bg-primary/10 text-primary"
+                          : "text-muted-foreground hover:bg-muted"
                       }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -244,7 +282,9 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
         <nav className="fixed bottom-0 left-0 right-0 md:hidden bg-surface border-t border-border z-50 shadow-[0_-2px_16px_rgba(99,102,241,0.08)]">
           <div className="flex items-end justify-around h-16 px-1">
             {navItems.map(({ href, icon: Icon, label }) => {
-              const isActive = location.pathname === href || location.pathname.startsWith(href + "/");
+              const isActive =
+                location.pathname === href ||
+                location.pathname.startsWith(href + "/");
               return (
                 <Link
                   key={href}
@@ -258,7 +298,9 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
                   >
                     <Icon
                       className={`transition-all duration-200 ${
-                        isActive ? "w-4 h-4 text-primary" : "w-5 h-5 text-muted-foreground"
+                        isActive
+                          ? "w-4 h-4 text-primary"
+                          : "w-5 h-5 text-muted-foreground"
                       }`}
                     />
                   </div>
@@ -279,14 +321,24 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
             >
               <div
                 className={`flex items-center justify-center rounded-full transition-all duration-200 ${
-                  showMoreMenu || moreItems.some(({ href }) => location.pathname === href || location.pathname.startsWith(href + "/"))
+                  showMoreMenu ||
+                  moreItems.some(
+                    ({ href }) =>
+                      location.pathname === href ||
+                      location.pathname.startsWith(href + "/"),
+                  )
                     ? "bg-primary/20 w-12 h-6"
                     : "w-8 h-6"
                 }`}
               >
                 <MoreHorizontal
                   className={`transition-all duration-200 ${
-                    showMoreMenu || moreItems.some(({ href }) => location.pathname === href || location.pathname.startsWith(href + "/"))
+                    showMoreMenu ||
+                    moreItems.some(
+                      ({ href }) =>
+                        location.pathname === href ||
+                        location.pathname.startsWith(href + "/"),
+                    )
                       ? "w-4 h-4 text-primary"
                       : "w-5 h-5 text-muted-foreground"
                   }`}
@@ -294,7 +346,12 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
               </div>
               <span
                 className={`text-[10px] font-semibold leading-none transition-colors duration-200 ${
-                  showMoreMenu || moreItems.some(({ href }) => location.pathname === href || location.pathname.startsWith(href + "/"))
+                  showMoreMenu ||
+                  moreItems.some(
+                    ({ href }) =>
+                      location.pathname === href ||
+                      location.pathname.startsWith(href + "/"),
+                  )
                     ? "text-primary"
                     : "text-muted-foreground"
                 }`}

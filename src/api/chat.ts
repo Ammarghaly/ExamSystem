@@ -1,7 +1,13 @@
 import api from './axios';
 
-export const getGroupMessages = async (groupId: string) => {
-  const response = await api.get(`/chat/messages/${groupId}`);
+export const getGroupMessages = async (
+  groupId: string,
+  page: number = 1,
+  limit: number = 20,
+) => {
+  const response = await api.get(
+    `/chat/messages/${groupId}?page=${page}&limit=${limit}`,
+  );
   return response.data;
 };
 
