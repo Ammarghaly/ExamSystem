@@ -1,9 +1,10 @@
-import { LogOut, Sun, Moon } from "lucide-react";
+import { LogOut, Sun, Moon, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import img from "../../assets/img.svg";
 import iconLogo from "../../assets/icon-logo.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUserStore } from "../../stores/use-user-store";
 import { useThemeStore } from "../../stores/use-theme-store";
+import { useLayoutStore } from "../../stores/use-layout-store";
 import { logout } from "../../api/auth";
 import toast from "react-hot-toast";
 import { disconnectSocket } from "../../socket/socketConnection";
@@ -18,6 +19,7 @@ export function Header({ title, role }: HeaderProps) {
   const navigate = useNavigate();
   const { currentUser } = useUserStore();
   const { theme, toggleTheme } = useThemeStore();
+  const { isSidebarCollapsed, toggleSidebar } = useLayoutStore();
 
   const handleLogout = async () => {
     try {
@@ -57,6 +59,18 @@ export function Header({ title, role }: HeaderProps) {
   return (
     <header className="h-16 bg-surface/80 backdrop-blur-md border-b border-border flex items-center justify-between px-2 md:px-6 z-10 shrink-0">
       <div className="flex items-center gap-2">
+        <button
+          onClick={toggleSidebar}
+          className="hidden md:flex p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors cursor-pointer"
+          title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+        >
+          {isSidebarCollapsed ? (
+            <PanelLeftOpen className="w-5 h-5" />
+          ) : (
+            <PanelLeftClose className="w-5 h-5" />
+          )}
+        </button>
+
         <img
           src={iconLogo}
           alt="Logo"

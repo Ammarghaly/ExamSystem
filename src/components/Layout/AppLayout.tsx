@@ -12,8 +12,11 @@ import {
   CreditCard,
   MoreHorizontal,
   MessageSquare,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 import { useUserStore } from "../../stores/use-user-store";
+import { useLayoutStore } from "../../stores/use-layout-store";
 import { Header } from "./Header";
 import CreateGroupModal from "../groups/CreateGroupModal";
 import logoIcon from "../../assets/icon-logo.png";
@@ -22,6 +25,7 @@ import { getMe } from "../../api/auth";
 export function AppLayout({ children, title }: { children: React.ReactNode; title?: string }) {
   const location = useLocation();
   const { currentUser, setCurrentUser } = useUserStore();
+  const { isSidebarCollapsed, toggleSidebar } = useLayoutStore();
   const isTeacher = currentUser?.role?.toLowerCase() === "teacher";
   const [showMoreMenu, setShowMoreMenu] = useState(false);
 
@@ -93,56 +97,117 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
   return (
     <div className="flex h-screen bg-background overflow-hidden font-sans">
       {/* Desktop Sidebar */}
-      <aside className="w-52 lg:w-64 bg-surface border-r border-border flex-col hidden md:flex z-20 shrink-0 transition-all duration-300">
-        <div className="h-16 flex items-center px-6 border-b border-border">
-     <Link to={isTeacher ? "/teacher/dashboard" : "/student/dashboard"} className="flex items-center gap-3">
-    <img
-      src={logoIcon}
-      alt="Academix"
-      className="h-14 w-14 object-contain"
-    />
+      {/* Desktop Sidebar */}
+      <aside
+        className={`bg-surface border-r border-border flex-col hidden md:flex z-20 shrink-0 transition-all duration-300 ${
+          isSidebarCollapsed ? "w-20" : "w-52 lg:w-64"
+        }`}
+      >
+        <div className="h-16 flex items-center justify-between px-4 border-b border-border">
+          <Link
+            to={isTeacher ? "/teacher/dashboard" : "/student/dashboard"}
+            className={`flex items-center gap-3 overflow-hidden ${
+              isSidebarCollapsed ? "justify-center w-full" : ""
+            }`}
+            title={isSidebarCollapsed ? "Academix" : undefined}
+          >
+            <img
+              src={logoIcon}
+              alt="Academix"
+              className="h-10 w-10 object-contain shrink-0"
+            />
+            {!isSidebarCollapsed && (
+              <div className="min-w-0">
+                <h1 className="text-base font-bold text-foreground truncate">
+                  Academix
+                </h1>
+                <p className="hidden lg:block text-[11px] text-muted-foreground truncate">
+                  AI Exam Platform
+                </p>
+              </div>
+            )}
+          </Link>
 
-    <div>
-      <h1 className="text-lg font-bold text-foreground">
-        Academix
-      </h1>
-      <p className="hidden lg:block text-xs text-muted-foreground">
-        AI Exam Platform
-      </p>
-    </div>
-  </Link>
-</div>
+          {!isSidebarCollapsed && (
+            <button
+              onClick={toggleSidebar}
+              className="p-1.5 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer shrink-0"
+              title="Collapse Sidebar"
+            >
+              <PanelLeftClose className="w-5 h-5" />
+            </button>
+          )}
+        </div>
 
-        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        {isSidebarCollapsed && (
+          <div className="px-3 pt-3 flex justify-center border-b border-border/40 pb-2">
+            <button
+              onClick={toggleSidebar}
+              className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-primary transition-colors cursor-pointer"
+              title="Expand Sidebar"
+            >
+              <PanelLeftOpen className="w-5 h-5" />
+            </button>
+          </div>
+        )}
+
+        <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
           {sidebarItems.map((item) => {
             const Icon = item.icon;
             const isCurrent =
               location.pathname === item.href ||
-              (item.href.includes("dashboard") && location.pathname.includes("dashboard"));
+              (item.href.includes("dashboard") &&
+                location.pathname.includes("dashboard"));
             return (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ${
+                title={isSidebarCollapsed ? item.name : undefined}
+                className={`flex items-center gap-3 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3.5"
+                } ${
                   isCurrent
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 }`}
               >
-                <Icon className={`w-5 h-5 ${isCurrent ? "text-primary" : "text-muted-foreground"}`} />
-                {item.name}
+                <Icon
+                  className={`w-5 h-5 shrink-0 ${
+                    isCurrent ? "text-primary" : "text-muted-foreground"
+                  }`}
+                />
+                {!isSidebarCollapsed && (
+                  <span className="truncate">{item.name}</span>
+                )}
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t border-border">
+        <div className="p-3 border-t border-border">
           <Link
-            to={isTeacher ? "/teacher/generate-exam" : "/student/generate-exam/ai-generate"}
-            className="w-full bg-gradient-to-r from-orange-600 to-sky-500 text-white font-semibold text-sm py-3 px-4 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-sm"
+            to={
+              isTeacher
+                ? "/teacher/generate-exam"
+                : "/student/generate-exam/ai-generate"
+            }
+            title={
+              isSidebarCollapsed
+                ? isTeacher
+                  ? "Create New Exam"
+                  : "AI Study Plan"
+                : undefined
+            }
+            className={`w-full bg-gradient-to-r from-orange-600 to-sky-500 text-white font-semibold text-sm py-3 rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-sm ${
+              isSidebarCollapsed ? "px-2" : "px-4"
+            }`}
           >
-            <Sparkles className="w-5 h-5" />
-            {isTeacher ? "Create New Exam" : "AI Study Plan"}
+            <Sparkles className="w-5 h-5 shrink-0" />
+            {!isSidebarCollapsed && (
+              <span className="truncate">
+                {isTeacher ? "Create New Exam" : "AI Study Plan"}
+              </span>
+            )}
           </Link>
         </div>
       </aside>
