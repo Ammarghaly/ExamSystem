@@ -16,6 +16,13 @@ import {
   sendMessage,
   onReceiveMessage,
   offReceiveMessage,
+  onTyping,
+  offTyping,
+  onStopTyping,
+  offStopTyping,
+  seenMessage,
+  onSeenMessage,
+  offSeenMessage,
 } from "@/socket/chat.socket";
 import { connectSocket } from "@/socket/socketConnection";
 import { socket } from "@/socket/socket";
@@ -32,12 +39,56 @@ export default function ChatsPage() {
     Record<string, Message[]>
   >({});
 
+  const [typingMap, setTypingMap] = useState<
+    Record<string, { id: string; name: string; avatar?: string } | null>
+  >({});
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token && !socket.connected) {
       connectSocket(token);
     }
   }, []);
+
+  // Listen to typing & stop typing socket events
+  useEffect(() => {
+    const handleTyping = ({ groupId, user }: { groupId: string; user: any }) => {
+      console.log("Typing event received:", groupId, user);
+      const rawUserId = user?.id || user?._id;
+      if (
+        rawUserId &&
+        currentUserId &&
+        rawUserId.toString() === currentUserId.toString()
+      ) {
+        return; // Ignore typing indicator for self
+      }
+      setTypingMap((prev) => ({
+        ...prev,
+        [groupId]: user,
+      }));
+    };
+
+    const handleStopTyping = ({
+      groupId,
+    }: {
+      groupId: string;
+      userId: string;
+    }) => {
+      console.log("Stop typing event received:", groupId);
+      setTypingMap((prev) => ({
+        ...prev,
+        [groupId]: null,
+      }));
+    };
+
+    onTyping(handleTyping);
+    onStopTyping(handleStopTyping);
+
+    return () => {
+      offTyping(handleTyping);
+      offStopTyping(handleStopTyping);
+    };
+  }, [currentUserId]);
 
   const parseMessage = (m: any): Message => {
     const senderObj = m.sender || (typeof m.senderId === "object" ? m.senderId : null);
@@ -286,7 +337,11 @@ export default function ChatsPage() {
                 messages={activeMessages}
                 onSendMessage={handleSendMessage}
                 onBack={handleBack}
-                isTyping={false}
+                isTyping={Boolean(selectedId && typingMap[selectedId])}
+                typerName={selectedId ? typingMap[selectedId]?.name : undefined}
+                typerAvatar={
+                  selectedId ? typingMap[selectedId]?.avatar : undefined
+                }
               />
             )
           ) : (

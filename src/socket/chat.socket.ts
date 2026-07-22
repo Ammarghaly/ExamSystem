@@ -46,3 +46,49 @@ export const onReceiveMessage = (callback: (message: any) => void) => {
 export const offReceiveMessage = (callback: (message: any) => void) => {
   socket.off(CHAT_EVENTS.RECEIVE, callback);
 };
+
+export const onTyping = (
+  callback: (data: { groupId: string; user: any }) => void,
+) => {
+  socket.on(CHAT_EVENTS.TYPING, callback);
+};
+
+export const offTyping = (
+  callback: (data: { groupId: string; user: any }) => void,
+) => {
+  socket.off(CHAT_EVENTS.TYPING, callback);
+};
+
+export const onStopTyping = (
+  callback: (data: { groupId: string; userId: string }) => void,
+) => {
+  socket.on(CHAT_EVENTS.STOP_TYPING, callback);
+};
+
+export const offStopTyping = (
+  callback: (data: { groupId: string; userId: string }) => void,
+) => {
+  socket.off(CHAT_EVENTS.STOP_TYPING, callback);
+};
+
+export const onSeenMessage = (
+  callback: (data: {
+    groupId: string;
+    userId: string;
+    messageId: string;
+    seenAt: string;
+  }) => void,
+) => {
+  socket.on(CHAT_EVENTS.SEEN, callback);
+};
+
+export const offSeenMessage = (
+  callback: (data: {
+    groupId: string;
+    userId: string;
+    messageId: string;
+    seenAt: string;
+  }) => void,
+) => {
+  socket.off(CHAT_EVENTS.SEEN, callback);
+};

@@ -1,27 +1,26 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Send, Smile, Paperclip } from "lucide-react";
-import {
-  offReceiveMessage,
-  onReceiveMessage,
-  sendMessage,
-} from "@/socket/chat.socket";
-import toast from "react-hot-toast";
+import { startTyping, stopTyping } from "@/socket/chat.socket";
 
 interface MessageComposerProps {
+  groupId?: string;
   onSendMessage: (text: string) => void;
 }
 
 const SAMPLE_EMOJIS = ["👍", "❤️", "😊", "🎉", "🔥", "🙌", "📚", "💡"];
 
 export const MessageComposer: React.FC<MessageComposerProps> = ({
+  groupId,
   onSendMessage,
 }) => {
   const [text, setText] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(e.target.value);
+    const val = e.target.value;
+    setText(val);
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${Math.min(
@@ -29,22 +28,22 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
         128,
       )}px`;
     }
+
+    if (groupId && val.trim().length > 0) {
+      startTyping(groupId);
+      if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
+      typingTimerRef.current = setTimeout(() => {
+        stopTyping(groupId);
+      }, 2500);
+    }
   };
-
-  useEffect(() => {
-    const handleReceive = (msg: any) => {
-      console.log("Message received from server: ", msg);
-    };
-
-    onReceiveMessage(handleReceive);
-
-    return () => {
-      offReceiveMessage(handleReceive);
-    };
-  }, []);
 
   const handleSend = () => {
     if (!text.trim()) return;
+    if (groupId) {
+      if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
+      stopTyping(groupId);
+    }
     onSendMessage(text.trim());
     setText("");
     setShowEmojiPicker(false);

@@ -12,6 +12,8 @@ interface ChatWindowProps {
   onSendMessage: (text: string) => void;
   onBack?: () => void;
   isTyping?: boolean;
+  typerName?: string;
+  typerAvatar?: string;
 }
 
 export const ChatWindow: React.FC<ChatWindowProps> = ({
@@ -20,6 +22,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   onSendMessage,
   onBack,
   isTyping,
+  typerName,
+  typerAvatar,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -44,8 +48,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
 
         {isTyping && (
           <TypingIndicator
-            typerName={conversation.teacherName}
-            avatarUrl={conversation.image}
+            typerName={typerName || conversation.teacherName}
+            avatarUrl={typerAvatar || conversation.image}
           />
         )}
 
@@ -53,7 +57,10 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
       </div>
 
       {/* Bottom Message Composer */}
-      <MessageComposer onSendMessage={onSendMessage} />
+      <MessageComposer
+        groupId={conversation.id}
+        onSendMessage={onSendMessage}
+      />
     </div>
   );
 };
