@@ -4,7 +4,7 @@ import type { Student } from "../../types/group.types";
 
 interface Props {
   student: Student;
-  onRemove: (id: string) => void;
+  onRemove: (id: string, name: string) => void;
 }
 
 export default function StudentRow({ student, onRemove }: Props) {
@@ -54,8 +54,9 @@ export default function StudentRow({ student, onRemove }: Props) {
       {/* Actions */}
       <td className="px-6 py-4">
         <button
-          onClick={() => onRemove(student.id)}
-          className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-700 font-medium transition-colors opacity-100 group-hover:opacity-100"
+          onClick={() => onRemove(student.id, student.name)}
+          className="flex items-center gap-1.5 text-xs text-rose-600 hover:text-rose-700 font-semibold px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200/60 transition-colors cursor-pointer"
+          title="Remove student from group"
         >
           <UserMinus size={14} />
           Remove

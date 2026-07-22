@@ -19,7 +19,7 @@ import AddStudentModal from "../components/groups/AddStudentModal";
 import StudentsTab from "../components/groups/StudentsTab";
 import ExamsTab from "../components/groups/ExamsTab";
 import GroupPerformanceOverview from "../components/groups/GroupPerformanceOverview";
-
+import { Modal } from "../components/Common/Modal";
 
 const examStatusStyles: Record<AssignedExam["status"], string> = {
   Active: "bg-blue-100 text-blue-700",
@@ -28,7 +28,6 @@ const examStatusStyles: Record<AssignedExam["status"], string> = {
 };
 
 // ── Helper ────────────────────────────────────────────────────────────────────
-
 
 const ITEMS_PER_PAGE = 4;
 
@@ -42,6 +41,10 @@ export default function GroupDetailsPage() {
   const [copied, setCopied] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [studentToRemove, setStudentToRemove] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const { currentUser } = useUserStore();
   const isStudent = currentUser?.role === "Student";
@@ -58,13 +61,20 @@ export default function GroupDetailsPage() {
   });
 
   // ── Remove student ─────────────────────────────────────────────────────────
-  const { mutate: removeStudent } = useMutation({
+  const { mutate: removeStudent, isPending: isRemovingStudent } = useMutation({
     mutationFn: (studentId: string) => removeStudentFromGroup(id!, studentId),
     onSuccess: () => {
-      toast.success("Student removed successfully.");
+      toast.success("Student removed from group successfully.");
+      setStudentToRemove(null);
       queryClient.invalidateQueries({ queryKey: ["groupDetails", id] });
     },
-    onError: () => toast.error("Failed to remove student."),
+    onError: (err: any) => {
+      const msg =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        "Failed to remove student.";
+      toast.error(msg);
+    },
   });
 
   // ── Copy ───────────────────────────────────────────────────────────────────
@@ -298,7 +308,9 @@ export default function GroupDetailsPage() {
               setCurrentPage={setCurrentPage}
               totalPages={totalPages}
               itemsPerPage={ITEMS_PER_PAGE}
-              removeStudent={(studentId) => removeStudent(studentId)}
+              removeStudent={(studentId, studentName) =>
+                setStudentToRemove({ id: studentId, name: studentName })
+              }
               setIsAddModalOpen={setIsAddModalOpen}
             />
           )}
@@ -333,6 +345,27 @@ export default function GroupDetailsPage() {
         onClose={() => setIsAddModalOpen(false)}
         groupId={id!}
         groupName={group.groupName}
+      />
+
+      {/* Confirm Remove Student Modal */}
+      <Modal
+        isOpen={!!studentToRemove}
+        onClose={() => setStudentToRemove(null)}
+        title="Remove Student from Group"
+        description={
+          <>
+            Are you sure you want to remove{" "}
+            <strong className="text-gray-900">{studentToRemove?.name}</strong>{" "}
+            from <strong>{group?.groupName}</strong>? The student will no longer
+            have access to this group or its assigned exams.
+          </>
+        }
+        primaryActionText={isRemovingStudent ? "Removing..." : "Remove Student"}
+        primaryActionOnClick={() => {
+          if (studentToRemove) removeStudent(studentToRemove.id);
+        }}
+        primaryActionColor="rose"
+        secondaryActionText="Cancel"
       />
     </div>
   );

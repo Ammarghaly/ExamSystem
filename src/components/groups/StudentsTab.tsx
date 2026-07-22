@@ -9,7 +9,7 @@ interface Props {
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   totalPages: number;
   itemsPerPage: number;
-  removeStudent: (id: string) => void;
+  removeStudent: (id: string, name: string) => void;
   setIsAddModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -62,7 +62,7 @@ export default function StudentsTab({
                 <StudentRow
                   key={student.id}
                   student={student}
-                  onRemove={(id) => removeStudent(id)}
+                  onRemove={(id, name) => removeStudent(id, name)}
                 />
               ))
             ) : (
