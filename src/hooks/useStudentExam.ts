@@ -52,8 +52,17 @@ export function useStudentExam() {
         setQuestions(mapped);
       }
     } catch (err: any) {
-      toast.error(err.response?.data?.error || err.message || "Failed to load exam");
-      navigate('/');
+      const errorMsg =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.message ||
+        "Failed to load exam";
+      toast.error(errorMsg);
+      if (err.response?.status === 409) {
+        navigate("/student/dashboard");
+      } else {
+        navigate("/");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -64,6 +73,32 @@ export function useStudentExam() {
       startExamSession();
     }
   }, [id]);
+
+  // Trap browser Back button and tab refresh/close while exam is in progress
+  useEffect(() => {
+    if (isLoading || isSubmitting) return;
+
+    window.history.pushState(null, "", window.location.href);
+
+    const handlePopState = (e: PopStateEvent) => {
+      e.preventDefault();
+      window.history.pushState(null, "", window.location.href);
+      openModal("confirmExitExam");
+    };
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isLoading, isSubmitting, openModal]);
 
   const currentQuestion = questions[currentIndex];
 
