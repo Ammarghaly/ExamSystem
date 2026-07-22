@@ -1,6 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Send, Smile, Paperclip } from "lucide-react";
-import { offReceiveMessage, onReceiveMessage } from "@/socket/chat.socket";
+import {
+  offReceiveMessage,
+  onReceiveMessage,
+  sendMessage,
+} from "@/socket/chat.socket";
+import toast from "react-hot-toast";
 
 interface MessageComposerProps {
   onSendMessage: (text: string) => void;

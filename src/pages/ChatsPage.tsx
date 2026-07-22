@@ -14,6 +14,8 @@ import { joinGroup, leaveGroup, sendMessage } from "@/socket/chat.socket";
 import { connectSocket } from "@/socket/socketConnection";
 import { socket } from "@/socket/socket";
 
+import toast from "react-hot-toast";
+
 export default function ChatsPage() {
   const { currentUser } = useUserStore();
   const currentUserId = currentUser?._id || currentUser?.id;
@@ -147,6 +149,9 @@ export default function ChatsPage() {
     // Send message over socket to server
     sendMessage(selectedId, text, (ack: any) => {
       console.log("Message sent acknowledgment from server:", ack);
+      if (ack && !ack.success) {
+        toast.error("Failed to send message");
+      }
     });
 
     const now = new Date();
