@@ -22,7 +22,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
 
   if (isMine) {
     return (
-      <div className="flex flex-col items-end max-w-[85%] sm:max-w-[70%] ml-auto min-w-0">
+      <div className="flex flex-col items-end max-w-[85%] md:max-w-[540px] lg:max-w-[580px] ml-auto min-w-0">
         <div className="flex items-center gap-2 mb-1 px-1">
           <span className="text-[10px] text-muted-foreground">
             {message.timestamp}
@@ -49,7 +49,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   }
 
   return (
-    <div className="flex items-start gap-2.5 max-w-[85%] sm:max-w-[70%] min-w-0">
+    <div className="flex items-start gap-2.5 max-w-[85%] md:max-w-[540px] lg:max-w-[580px] min-w-0">
       <img
         src={senderAvatar}
         alt={message.senderName}
