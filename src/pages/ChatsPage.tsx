@@ -10,7 +10,13 @@ import { ConversationList } from "../components/chat/ConversationList";
 import { ChatWindow } from "../components/chat/ChatWindow";
 import { EmptyState } from "../components/chat/EmptyState";
 import { Loader2 } from "lucide-react";
-import { joinGroup, leaveGroup, sendMessage } from "@/socket/chat.socket";
+import {
+  joinGroup,
+  leaveGroup,
+  sendMessage,
+  onReceiveMessage,
+  offReceiveMessage,
+} from "@/socket/chat.socket";
 import { connectSocket } from "@/socket/socketConnection";
 import { socket } from "@/socket/socket";
 
@@ -32,6 +38,81 @@ export default function ChatsPage() {
       connectSocket(token);
     }
   }, []);
+
+  // Real-time socket message listener
+  useEffect(() => {
+    const handleIncomingMessage = (m: any) => {
+      console.log("Real-time message received in ChatsPage:", m);
+      const groupId = m.groupId;
+      if (!groupId) return;
+
+      const senderId = m.sender?.id || m.senderId;
+      const isMine =
+        senderId &&
+        currentUserId &&
+        senderId.toString() === currentUserId.toString();
+
+      const senderRole = m.sender?.role || m.senderRole;
+      const isTeacher =
+        senderRole?.toLowerCase() === "teacher" ||
+        m.sender?.name?.startsWith("Dr.") ||
+        m.sender?.name?.startsWith("Prof.");
+
+      const formattedTime = m.createdAt
+        ? new Date(m.createdAt).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+
+      const newMsg: Message = {
+        id: m.id || m._id || `msg-${Date.now()}`,
+        conversationId: groupId,
+        senderId: senderId || "",
+        senderName: m.sender?.name || "Member",
+        senderAvatar: m.sender?.avatar || "",
+        senderRole: senderRole || "Student",
+        isTeacher: Boolean(isTeacher),
+        text: m.content || "",
+        timestamp: formattedTime,
+        isMine: Boolean(isMine),
+        isSeen: true,
+      };
+
+      setLocalMessagesMap((prev) => {
+        const currentList = prev[groupId] || [];
+        if (isMine) {
+          const hasTemp = currentList.some((msg) =>
+            msg.id.startsWith("local-msg-"),
+          );
+          if (hasTemp) {
+            const filtered = currentList.filter(
+              (msg) => !msg.id.startsWith("local-msg-"),
+            );
+            return {
+              ...prev,
+              [groupId]: [...filtered, newMsg],
+            };
+          }
+        }
+        if (currentList.some((msg) => msg.id === newMsg.id)) {
+          return prev;
+        }
+        return {
+          ...prev,
+          [groupId]: [...currentList, newMsg],
+        };
+      });
+    };
+
+    onReceiveMessage(handleIncomingMessage);
+    return () => {
+      offReceiveMessage(handleIncomingMessage);
+    };
+  }, [currentUserId]);
 
   // 1. GET joined groups from backend API (GET only)
   const {
