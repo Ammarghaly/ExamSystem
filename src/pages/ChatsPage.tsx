@@ -90,6 +90,27 @@ export default function ChatsPage() {
     };
   }, [currentUserId]);
 
+  const [seenMessageIds, setSeenMessageIds] = useState<Record<string, boolean>>({});
+
+  // Listen to real-time message seen events
+  useEffect(() => {
+    const handleSeen = (data: {
+      groupId: string;
+      userId: string;
+      messageId: string;
+    }) => {
+      console.log("Real-time seen event received:", data);
+      if (data?.messageId) {
+        setSeenMessageIds((prev) => ({ ...prev, [data.messageId]: true }));
+      }
+    };
+
+    onSeenMessage(handleSeen);
+    return () => {
+      offSeenMessage(handleSeen);
+    };
+  }, []);
+
   const parseMessage = (m: any): Message => {
     const senderObj = m.sender || (typeof m.senderId === "object" ? m.senderId : null);
     const rawSenderId = senderObj?.id || senderObj?._id || m.senderId;
@@ -117,8 +138,11 @@ export default function ChatsPage() {
           minute: "2-digit",
         });
 
+    const msgId = m.id || m._id || `msg-${Date.now()}`;
+    const isMsgSeen = Boolean(m.isSeen || (msgId && seenMessageIds[msgId]));
+
     return {
-      id: m.id || m._id || `msg-${Date.now()}`,
+      id: msgId,
       conversationId: m.groupId,
       senderId: senderIdStr,
       senderName,
@@ -128,7 +152,7 @@ export default function ChatsPage() {
       text: m.content || m.text || "",
       timestamp: formattedTime,
       isMine,
-      isSeen: true,
+      isSeen: isMsgSeen,
     };
   };
 
@@ -230,6 +254,17 @@ export default function ChatsPage() {
   const activeMessages = selectedId
     ? [...fetchedMessages, ...(localMessagesMap[selectedId] || [])]
     : [];
+
+  // Emit seenMessage socket event when viewing incoming messages in selected group
+  useEffect(() => {
+    if (!selectedId || activeMessages.length === 0) return;
+    const lastIncomingMsg = [...activeMessages]
+      .reverse()
+      .find((m) => !m.isMine);
+    if (lastIncomingMsg) {
+      seenMessage(selectedId, lastIncomingMsg.id);
+    }
+  }, [selectedId, activeMessages.length]);
 
   // Map backend groups to Conversation objects
   const conversations: Conversation[] = backendGroups.map((g: any) => {
