@@ -139,18 +139,6 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
           )}
         </div>
 
-        {isSidebarCollapsed && (
-          <div className="px-3 pt-3 flex justify-center border-b border-border/40 pb-2">
-            <button
-              onClick={toggleSidebar}
-              className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-primary transition-colors cursor-pointer"
-              title="Expand Sidebar"
-            >
-              <PanelLeftOpen className="w-5 h-5" />
-            </button>
-          </div>
-        )}
-
         <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
           {sidebarItems.map((item) => {
             const Icon = item.icon;

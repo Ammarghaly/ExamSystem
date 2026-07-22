@@ -59,17 +59,15 @@ export function Header({ title, role }: HeaderProps) {
   return (
     <header className="h-16 bg-surface/80 backdrop-blur-md border-b border-border flex items-center justify-between px-2 md:px-6 z-10 shrink-0">
       <div className="flex items-center gap-2">
-        <button
-          onClick={toggleSidebar}
-          className="hidden md:flex p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors cursor-pointer"
-          title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-        >
-          {isSidebarCollapsed ? (
+        {isSidebarCollapsed && (
+          <button
+            onClick={toggleSidebar}
+            className="hidden md:flex p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors cursor-pointer"
+            title="Expand Sidebar"
+          >
             <PanelLeftOpen className="w-5 h-5" />
-          ) : (
-            <PanelLeftClose className="w-5 h-5" />
-          )}
-        </button>
+          </button>
+        )}
 
         <img
           src={iconLogo}
