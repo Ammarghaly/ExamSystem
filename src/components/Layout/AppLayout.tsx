@@ -11,6 +11,7 @@ import {
   UserCheck,
   CreditCard,
   MoreHorizontal,
+  MessageSquare,
 } from "lucide-react";
 import { useUserStore } from "../../stores/use-user-store";
 import { Header } from "./Header";
@@ -42,24 +43,26 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
   const navItems = isTeacher
     ? [
         { href: "/teacher/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+        { href: "/teacher/chats", icon: MessageSquare, label: "Chats" },
         { href: "/teacher/generate-exam", icon: Sparkles, label: "Generate" },
-        { href: "/teacher/exam-management", icon: FileText, label: "Exams" },
         { href: "/teacher/groups", icon: Users, label: "Groups" },
       ]
     : [
         { href: "/student/dashboard", icon: GraduationCap, label: "Learning" },
+        { href: "/student/chats", icon: MessageSquare, label: "Chats" },
         { href: "/student/generate-exam/ai-generate", icon: Sparkles, label: "Generate" },
         { href: "/student/groups", icon: Users, label: "Groups" },
-        { href: "/student/practice", icon: FileText, label: "Practice" },
       ];
 
   const moreItems = isTeacher
     ? [
+        { href: "/teacher/exam-management", icon: FileText, label: "Exams" },
         { href: "/teacher/admissions", icon: UserCheck, label: "Requests" },
         { href: "/teacher/pricing", icon: CreditCard, label: "Plans" },
         { href: "/teacher/profile", icon: User, label: "Profile" },
       ]
     : [
+        { href: "/student/practice", icon: FileText, label: "Practice" },
         { href: "/student/results", icon: BarChart, label: "Results" },
         { href: "/student/pricing", icon: CreditCard, label: "Plans" },
         { href: "/student/profile", icon: User, label: "Profile" },
@@ -68,6 +71,7 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
   const sidebarItems = isTeacher
     ? [
         { name: "Dashboard", href: "/teacher/dashboard", icon: LayoutDashboard },
+        { name: "Chats", href: "/teacher/chats", icon: MessageSquare },
         { name: "Generate Exam", href: "/teacher/generate-exam", icon: Sparkles },
         { name: "Manage exams", href: "/teacher/exam-management", icon: FileText },
         { name: "My Groups", href: "/teacher/groups", icon: Users },
@@ -77,6 +81,7 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
       ]
     : [
         { name: "My Learning", href: "/student/dashboard", icon: GraduationCap },
+        { name: "Chats", href: "/student/chats", icon: MessageSquare },
         { name: "Generate Exam", href: "/student/generate-exam/ai-generate", icon: Sparkles },
         { name: "My Groups", href: "/student/groups", icon: Users },
         { name: "Practice Exams", href: "/student/practice", icon: FileText },

@@ -28,6 +28,7 @@ import StudentResultsPage from "./pages/StudentResultsPage";
 import StudentAdmissionsPage from "./pages/StudentAdmissionsPage";
 import PricingPage from "./pages/PricingPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import ChatsPage from "./pages/ChatsPage";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
@@ -75,6 +76,14 @@ function App() {
         />
 
         {/* Protected routes — redirect to login if not logged in */}
+        <Route
+          path="/teacher/chats"
+          element={
+            <ProtectedRoute>
+              <ChatsPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/teacher/dashboard"
           element={
@@ -182,6 +191,14 @@ function App() {
         />
 
         {/* Student Routes */}
+        <Route
+          path="/student/chats"
+          element={
+            <ProtectedRoute>
+              <ChatsPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/student/dashboard"
           element={
