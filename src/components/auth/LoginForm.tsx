@@ -6,9 +6,9 @@ import { Mail, Lock, EyeOff, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
-import api from "../../api/axios";
-import { resendActivationOtp } from "../../api/auth";
+import { resendActivationOtp, login } from "../../api/auth";
 import { useUserStore } from "../../stores/use-user-store";
+import { connectSocket } from "../../socket/socketConnection";
 
 const REMEMBER_EMAIL_KEY = "rememberedEmail";
 
@@ -48,13 +48,8 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      const res = await api.post(`/auth/login`, {
-        email: data.email,
-        password: data.password,
-      });
-
-      const { token, user } = res.data;
-      // refreshToken is stored in httpOnly cookie automatically by the browser
+      const res = await login(data.email, data.password);
+      const { token, user } = res;
 
       // Remember me: save email for next visit, clear if unchecked
       if (data.rememberMe) {
@@ -65,7 +60,8 @@ export default function LoginForm() {
 
       // Always persist token and user in localStorage to keep user logged in across tabs
       localStorage.setItem("token", token);
-      
+      connectSocket(token);
+
       // Call Zustand store action which also sets the storage item
       setCurrentUser(user);
 
@@ -82,7 +78,9 @@ export default function LoginForm() {
       if (resData?.notVerified) {
         try {
           await resendActivationOtp(resData.email);
-          toast("Please verify your email. A new code was sent.", { icon: "📧" });
+          toast("Please verify your email. A new code was sent.", {
+            icon: "📧",
+          });
         } catch {
           toast("Please verify your email first.", { icon: "📧" });
         }
@@ -95,7 +93,6 @@ export default function LoginForm() {
     }
   };
 
-
   return (
     <div className="flex flex-col items-center w-full max-w-[430px]">
       {/* Sparkle icon */}
@@ -106,18 +103,26 @@ export default function LoginForm() {
         </svg>
       </div>
 
-
       <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-        Welcome to Academix 
+        Welcome to Academix
       </h1>
-      <p className="text-gray-500 dark:text-zinc-400 mb-8">Sign in to access your academic workspace.</p>
+      <p className="text-gray-500 dark:text-zinc-400 mb-8">
+        Sign in to access your academic workspace.
+      </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-5">
-
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full flex flex-col gap-5"
+      >
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700 dark:text-zinc-300">Email address</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-zinc-300">
+            Email address
+          </label>
           <div className="flex items-center border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 gap-3 focus-within:border-[#3730d4] dark:focus-within:border-indigo-500 transition-colors bg-white dark:bg-zinc-900/40">
-            <Mail size={18} className="text-gray-400 dark:text-zinc-500 shrink-0" />
+            <Mail
+              size={18}
+              className="text-gray-400 dark:text-zinc-500 shrink-0"
+            />
             <input
               type="email"
               placeholder="name@institution.edu"
@@ -130,11 +135,15 @@ export default function LoginForm() {
           )}
         </div>
 
-
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700 dark:text-zinc-300">Password</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-zinc-300">
+            Password
+          </label>
           <div className="flex items-center border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 gap-3 focus-within:border-[#3730d4] dark:focus-within:border-indigo-500 transition-colors bg-white dark:bg-zinc-900/40">
-            <Lock size={18} className="text-gray-400 dark:text-zinc-500 shrink-0" />
+            <Lock
+              size={18}
+              className="text-gray-400 dark:text-zinc-500 shrink-0"
+            />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
@@ -150,15 +159,19 @@ export default function LoginForm() {
             </button>
           </div>
           {errors.password && (
-            <span className="text-xs text-red-500">{errors.password.message}</span>
+            <span className="text-xs text-red-500">
+              {errors.password.message}
+            </span>
           )}
           <div className="flex justify-end">
-            <Link to="/forgot-password" className="text-sm text-[#3730d4] dark:text-indigo-400 font-medium hover:underline">
+            <Link
+              to="/forgot-password"
+              className="text-sm text-[#3730d4] dark:text-indigo-400 font-medium hover:underline"
+            >
               Forgot password?
             </Link>
           </div>
         </div>
-
 
         <label className="flex items-center gap-2 cursor-pointer select-none">
           <input
@@ -166,7 +179,9 @@ export default function LoginForm() {
             {...register("rememberMe")}
             className="w-4 h-4 rounded border-gray-300 dark:border-zinc-700 accent-[#3730d4] dark:accent-indigo-500"
           />
-          <span className="text-sm text-gray-600 dark:text-zinc-400">Remember me</span>
+          <span className="text-sm text-gray-600 dark:text-zinc-400">
+            Remember me
+          </span>
         </label>
 
         <button
@@ -180,7 +195,10 @@ export default function LoginForm() {
         {/* Register link */}
         <p className="text-center text-sm text-gray-500 dark:text-zinc-400">
           Don't have an account?{" "}
-          <Link to="/sign-up" className="text-[#3730d4] dark:text-indigo-400 font-medium hover:underline">
+          <Link
+            to="/sign-up"
+            className="text-[#3730d4] dark:text-indigo-400 font-medium hover:underline"
+          >
             Sign up
           </Link>
         </p>

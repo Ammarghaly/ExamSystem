@@ -15,12 +15,21 @@ export interface ResetPasswordResponse {
   message: string;
 }
 
-export async function sendOtp(email: string, purpose?: "verify" | "reset"): Promise<SendOtpResponse> {
-  const response = await api.post<SendOtpResponse>("/auth/send-otp", { email, purpose });
+export async function sendOtp(
+  email: string,
+  purpose?: "verify" | "reset",
+): Promise<SendOtpResponse> {
+  const response = await api.post<SendOtpResponse>("/auth/send-otp", {
+    email,
+    purpose,
+  });
   return response.data;
 }
 
-export async function verifyOtp(email: string, code: string): Promise<VerifyOtpResponse> {
+export async function verifyOtp(
+  email: string,
+  code: string,
+): Promise<VerifyOtpResponse> {
   const response = await api.post<VerifyOtpResponse>("/auth/verify-otp", {
     email,
     code,
@@ -31,23 +40,37 @@ export async function verifyOtp(email: string, code: string): Promise<VerifyOtpR
 export async function resetPassword(
   email: string,
   code: string,
-  password: string
+  password: string,
 ): Promise<ResetPasswordResponse> {
-  const response = await api.post<ResetPasswordResponse>("/auth/reset-password", {
-    email,
-    code,
-    password,
+  const response = await api.post<ResetPasswordResponse>(
+    "/auth/reset-password",
+    {
+      email,
+      code,
+      password,
+    },
+  );
+  return response.data;
+}
+
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string,
+) {
+  const response = await api.put("/auth/change-password", {
+    currentPassword,
+    newPassword,
   });
   return response.data;
 }
 
-export async function changePassword(currentPassword: string, newPassword: string) {
-  const response = await api.put('/auth/change-password', { currentPassword, newPassword });
-  return response.data;
-}
-
-export async function resendActivationOtp(email: string): Promise<SendOtpResponse> {
-  const response = await api.post<SendOtpResponse>("/auth/send-otp", { email, purpose: "verify" });
+export async function resendActivationOtp(
+  email: string,
+): Promise<SendOtpResponse> {
+  const response = await api.post<SendOtpResponse>("/auth/send-otp", {
+    email,
+    purpose: "verify",
+  });
   return response.data;
 }
 
@@ -62,7 +85,7 @@ export async function signUp(formData: FormData) {
 }
 
 export async function logout() {
-  await api.post("/auth/logout"); // cookie sent automatically
+  await api.post("/auth/logout");
   localStorage.removeItem("token");
   localStorage.removeItem("user");
   sessionStorage.removeItem("token");
@@ -75,11 +98,15 @@ export async function getMe() {
 }
 
 export async function updateUserProfile(formData: FormData) {
-  const response = await api.put<{ success: boolean; user: any }>("/auth/profile", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
+  const response = await api.put<{ success: boolean; user: any }>(
+    "/auth/profile",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     },
-  });
+  );
   return response.data;
 }
 
@@ -91,7 +118,9 @@ export async function updateUserCredits(creditsData: {
   planName?: string;
   planPrice?: number;
 }) {
-  const response = await api.put<{ success: boolean; data: any }>("/profile/checkout", creditsData);
+  const response = await api.put<{ success: boolean; data: any }>(
+    "/profile/checkout",
+    creditsData,
+  );
   return response.data;
 }
-
