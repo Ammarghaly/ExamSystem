@@ -260,7 +260,7 @@ export default function ChatsPage() {
     if (!selectedId || activeMessages.length === 0) return;
     const lastIncomingMsg = [...activeMessages]
       .reverse()
-      .find((m) => !m.isMine);
+      .find((m) => !m.isMine && m.id && !m.id.startsWith("local-msg-"));
     if (lastIncomingMsg) {
       seenMessage(selectedId, lastIncomingMsg.id);
     }
